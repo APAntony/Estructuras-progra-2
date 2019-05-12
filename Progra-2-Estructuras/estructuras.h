@@ -2,10 +2,8 @@
 #define ESTRUCTURAS_H
 
 
-class estructuras
-{
-public:
-    estructuras();
+struct Persona{
+
 };
 
 #endif // ESTRUCTURAS_H
