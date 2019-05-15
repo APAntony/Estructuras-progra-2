@@ -1,3 +1,4 @@
+//No los he terminado por un motivo de continentes
 Afganistán
 Alemania
 Arabia Saudita
@@ -5,8 +6,8 @@ Argelia
 Argentina
 Australia
 Austria
-Azerbaiyán
-Bélgica
+Azerbaiyan
+Belgica
 Birmania
 Bolivia
 Brasil
