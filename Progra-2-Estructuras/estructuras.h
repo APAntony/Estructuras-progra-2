@@ -17,4 +17,17 @@ struct Persona{
     //lista de hijos
 };
 
+struct Mundo{
+    QString paises[100];
+    QString nombre[1000];
+    QString apellidos[1000];
+    QString continentes[5];
+
+    Mundo(){
+
+    }
+
+    void lectura(QString array[]);
+};
+
 #endif // ESTRUCTURAS_H
