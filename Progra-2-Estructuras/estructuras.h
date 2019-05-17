@@ -8,7 +8,7 @@ struct Persona{
     QString nombre;
     QString apellido;
     QString pais;
-    QString continente
+    QString continente;
     QString creencia;
     QString profesion;
     QString correo;
@@ -25,8 +25,11 @@ struct Persona{
         profesion=pProf;
         correo=pCorreo;
     }
+
     Persona(){
     }
+
+    void obtenerHora(QString hora);
 };
 
 struct Mundo{
@@ -40,6 +43,7 @@ struct Mundo{
     }
 
     void lectura(QString array[]);
+    void crearPersonas();
 };
 
 #endif // ESTRUCTURAS_H
