@@ -15,6 +15,16 @@ void Persona::obtenerHora(QString hora){
     qDebug()<< hora;
 }
 
+void ListaPersonas::insertarPersona(Persona persona){
+	if(primerNodo==nullptr){
+		primerNodo==ultimoNodo==new NodoPersona(persona);
+	}
+	else{
+		ultimoNodo->siguiente=new NodoPersona(persona);
+		ultimoNodo=ultimoNodo->siguiente;
+	}
+}
+
 void Mundo::lectura(QString array[]) {
     ifstream archivo;
     string texto;
