@@ -32,6 +32,31 @@ struct Persona{
     void obtenerHora(QString hora);
 };
 
+struct NodoPersona{
+	Persona persona;
+	NodoPersona siguiente;
+	
+	NodoPersona(Persona pPersona){
+		persona=pPersona;
+		siguiente=nullptr;
+	}
+	
+	NodoPersona(){
+	}
+};
+
+struct ListaPersonas{
+	NodoPersona primerNodo;
+	NodoPersona ultimoNodo;
+	
+	ListaPersonas(){
+		primerNodo=ultimoNodo=nullptr;
+	}
+	
+	void insertarPersona(Persona);
+	Persona buscarPersona(int);
+};
+
 struct Mundo{
     QString paises[100];
     QString nombre[1000];
@@ -45,5 +70,7 @@ struct Mundo{
     void lectura(QString array[]);
     void crearPersonas();
 };
+
+
 
 #endif // ESTRUCTURAS_H
