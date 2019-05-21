@@ -2,6 +2,7 @@
 #define ESTRUCTURAS_H
 
 #include <QString>
+#include <QDate>
 
 struct Persona{
     int id;
@@ -12,8 +13,9 @@ struct Persona{
     QString creencia;
     QString profesion;
     QString correo;
+	QString fecha;
+	QString hora;
     //Falta:
-    //lo de la fecha de nacimiento
     //Los arrays o listas de pecados y buenas acciones
     //lista de hijos
     Persona(int pId,QString pNom,QString pApell,QString pContinente,QString pPais,QString pCreencia,QString pProf,QString pCorreo){
@@ -25,6 +27,8 @@ struct Persona{
         profesion=pProf;
         correo=pCorreo;
         continente = pContinente;
+		    fecha=(QDate::currentDate()).toString("dd/MM/yy");
+		    hora=(QTime::currentTime()).toString("hh:mm");
     }
 
     Persona(){

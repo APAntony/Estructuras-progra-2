@@ -6,15 +6,6 @@
 
 using namespace std;
 
-void Persona::obtenerHora(QString hora){
-    time_t tiempo = time(0);
-    struct tm *tlocal = localtime(&tiempo);
-    char output[128];
-    strftime(output,128,"%d/%m/%y %H:%M:%S",tlocal);
-    hora.fromLatin1(output, 128);                   //Intentando pasar a QString
-    qDebug()<< hora;
-}
-
 void ListaPersonas::insertarPersona(Persona persona){
     if(primerNodo == nullptr){
         primerNodo = ultimoNodo = new NodoPersona(persona);
