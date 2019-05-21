@@ -27,8 +27,8 @@ struct Persona{
         profesion=pProf;
         correo=pCorreo;
         continente = pContinente;
-		    fecha=(QDate::currentDate()).toString("dd/MM/yy");
-		    hora=(QTime::currentTime()).toString("hh:mm");
+        fecha=(QDate::currentDate()).toString("dd/MM/yy");
+        hora=(QTime::currentTime()).toString("hh:mm");
     }
 
     Persona(){
