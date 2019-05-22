@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QDate>
+#include <QVector>
 
 struct Persona{
     int id;
@@ -163,5 +164,25 @@ public: NodoAVL *raiz;
    void auxContador(NodoAVL*);
    void auxAltura(NodoAVL*, int);
 }; void Mostrar(QString n, int FE);
+
+
+struct ArbolHeap {
+    int tamanoActual;
+    QVector<Persona> listaHeap;
+
+    ArbolHeap(){
+        tamanoActual = 0;
+         Persona p = Persona(0,"nulo","","","","","","");
+        listaHeap.append(p);
+    }
+
+    void infiltArriba(int i);
+    void infiltAbajo(int i);
+    void insertar(Persona person);
+    int hijoMin(int i);
+    Persona eliminarMin();
+    void construirMonticulo(QVector<Persona> personas);
+    QString recorrer();
+};
 
 #endif // ESTRUCTURAS_H
