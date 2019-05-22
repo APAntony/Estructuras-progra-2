@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fstream>
+#include <QVector>
 
 using namespace std;
 
@@ -39,6 +40,8 @@ void Mundo::lectura(QString array[]) {
     archivo.close();  //Cerramos el archivo
 }
 
+
+//ARBOL AVL
 
 // Poda: borrar todos los NodoAVLs a partir de uno, incluido
 void AVL::Podar(NodoAVL* &NodoAVL) {
@@ -446,3 +449,89 @@ void AVL::auxAltura(NodoAVL *NodoAVL, int a) {
 void Mostrar(QString n, int FE) {
    qDebug() << n << "(" << FE << "),";
 }
+
+// FIN ARBOL AVL
+
+// INICIO ARBOL HEAP
+
+void ArbolHeap::infiltArriba(int i){
+    while ((i/2) > 0) {
+        if (listaHeap[i].id > listaHeap[i/2].id) {
+            Persona tmp = listaHeap[i/2];
+            listaHeap[i/2] = listaHeap[i];
+            listaHeap[i] = tmp;
+        }
+
+        i = i/2;
+    }
+}
+
+void ArbolHeap::infiltAbajo(int i){
+    while ((i*2) <= tamanoActual) {
+        int hm = hijoMin(i);
+        if (listaHeap[i].id < listaHeap[hm].id) {
+            Persona tmp = listaHeap[i];
+            listaHeap[i] = listaHeap[hm];
+            listaHeap[hm] = tmp;
+        }
+        i = hm;
+    }
+}
+
+int ArbolHeap::hijoMin(int i){
+    if ((i*2+1) > tamanoActual) {
+        return i*2;
+    }
+    else {
+        if (listaHeap[i*2].id < listaHeap[i*2+1].id) {
+            return i*2;
+        } else {
+            return i*2+1;
+        }
+    }
+}
+
+Persona ArbolHeap::eliminarMin(){
+    Persona valorSacado = listaHeap[1];
+    listaHeap[1] = listaHeap[tamanoActual];
+    tamanoActual = tamanoActual-1;
+    listaHeap.pop_back();
+    infiltAbajo(1);
+    return valorSacado;
+}
+
+void ArbolHeap::insertar(Persona person) {
+    listaHeap.append(person);
+    tamanoActual = tamanoActual+1;
+    infiltArriba(tamanoActual);
+}
+
+void ArbolHeap::construirMonticulo(QVector<Persona> persons){
+    QVector<Persona> personas;
+
+    Persona p = Persona(0,"nulo","","","","","","");
+    personas.append(p);
+
+    for(Persona per : persons){  //Se acomoda la lista dada para que quede como si fuera [0, dato, dato, dato,...]
+        personas.append(per);
+    }
+
+    int i = (persons.length()/2);
+    tamanoActual = persons.length();
+    listaHeap = personas;
+    while (i > 0) {
+        infiltAbajo(i);
+        i = i-1;
+    }
+}
+
+QString ArbolHeap::recorrer(){
+    QString msg = "";
+
+    for (int i = 1; i <= tamanoActual; i++) {
+        msg += listaHeap[i].nombre + '\n';
+    }
+
+    return msg;
+}
+
