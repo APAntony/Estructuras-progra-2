@@ -1,92 +1,100 @@
-//No los he terminado por un motivo de continentes
-Afganistán
-Alemania
-Arabia Saudita
+Angola
 Argelia
-Argentina
-Australia
-Austria
-Azerbaiyan
-Belgica
-Birmania
-Bolivia
-Brasil
 Camerún
-Canada
+Costa de Marfil
+Egipto
+Etiopia
+Gabon
+Gambia
+Ghana
+Guinea
+Kenia
+Liberia
+Libia
+Madagascar
+Marruecos
+Mauritania
+Nigeria
+Senegal
+Sudafrica
+Uganda
+Zambia
+Afganistan
+Arabia Saudita
+Banglades
+Butan
 Catar
-Chile
 China
 Corea del Norte
 Corea del Sur
-Costa de Marfil
-Costa Rica
-Croacia
-Cuba
-Dinamarca
-Ecuador
-Egipto
-Emiratos Arabes Unidos
-Eslovaquia
-Eslovenia
-Espana
-Estados Unidos
-Etiopía
 Filipinas
-Finlandia
-Fiyi
-Francia
-Gambia
-Ghana
-Grecia
-Honduras
-Hungria
 India
 Indonesia
 Irak
 Iran
-Irlanda
-Islandia
 Israel
-Italia
-Jamaica
-Japon
-Jordania
-Kazajistan
-Kenia
-Liberia
-Libia
-Lituania
-Luxemburgo
-Malasia
-Malta
-Marruecos
-Mauricio
-Mexico
-Micronesia
-Mozambique
-Namibia
+Japón
+Libano
 Nepal
-Nigeria
+Singapur
+Siria
+Tailandia
+Vietnam
+Alemania
+Belgica
+Croacia
+Dinamarca
+Eslovaquia
+Eslovenia
+España
+Francia
+Grecia
+Hungría
+Inglaterra
+Irlanda
+Italia
 Noruega
-Nueva Zelanda
-Oman
 Holanda
-Pakistan
+Polonia
+Portugal
+Rusia
+Serbia
+Suecia
+Suiza
+Ucrania
+Argentina
+Bolivia
+Brasil
+Canada
+Chile
+Colombia
+Costa Rica
+Cuba
+Ecuador
+El Salvador
+Estados Unidos
+Granada
+Guatemala
+Honduras
+Jamaica
+Mexico
+Nicaragua
 Panama
 Paraguay
 Peru
-Polonia
-Portugal
-Ruanda
-Rumania
-Rusia
-Senegal
-Serbia
-Singapur
-Siria
-Suecia
-Suiza
-Tailandia
-Turquía
-Ucrania
 Uruguay
+Venezuela
+Australia
+Micronesia
+Fiji
+Islas Marshall
+Islas Salomon
+Kiribati
+Nauru
+Nueva Zelanda
+Palau
+Papua Nueva Guinea
+Samoa
+Tonga
+Tuvalu
+Vanuatu
