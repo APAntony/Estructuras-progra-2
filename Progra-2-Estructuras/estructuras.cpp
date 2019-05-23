@@ -7,7 +7,25 @@
 
 using namespace std;
 
-void ListaPersonas::insertarPersona(Persona persona){
+QString Persona::imprimir(){
+    QString msg = "";
+    msg.append("Identificacion: " + QString::number(id));
+    msg.append("\n");
+    msg.append("Nombre: " + nombre + "\n");
+    msg.append("Apellido: " + apellido + "\n");
+    msg.append("Continente: " + continente + "\n");
+    msg.append("Pais: " + pais + "\n");
+    msg.append("Creencia: " + creencia + "\n");
+    msg.append("Profesion: " + profesion + "\n");
+    msg.append("Fecha de nacimiento: " + fecha + "\n");
+    msg.append("Hora de nacimiento: " + hora + "\n");
+
+    msg += "\n";
+
+    return msg;
+}
+
+void ListaPersonas::insertarPersona(Persona *persona){
     if(primerNodo == nullptr){
         primerNodo = ultimoNodo = new NodoPersona(persona);
 	}
@@ -17,12 +35,23 @@ void ListaPersonas::insertarPersona(Persona persona){
 	}
 }
 
-void Mundo::lectura(QString array[]) {
+QString ListaPersonas::imprimir(){
+    QString msg = "";
+    NodoPersona *tmp = primerNodo;
+    while (tmp != nullptr){
+        msg.append(tmp->persona->imprimir());
+        tmp = tmp->siguiente;
+    }
+
+    return msg;
+}
+
+void Mundo::lectura(QString array[], string url) {
     ifstream archivo;
     string texto;
     QString txt;
 
-    archivo.open("455-nombres.txt", ios::in);  //Se abre el archivo en modo lectura.
+    archivo.open(url, ios::in);  //Se abre el archivo en modo lectura.
 
     if(archivo.fail()) {
         qDebug()<<"No se pudo abrir el programa";
@@ -284,12 +313,15 @@ void AVL::Borrar(int dat) {
                padre = actual->padre;
             }
 
-            if(padre)
-               if(padre->derecho == actual) Equilibrar(padre, DERECHO, false);
+            if(padre) {
+               if(padre->derecho == actual)
+                   Equilibrar(padre, DERECHO, false);
 
                else {
                    Equilibrar(padre, IZQUIERDO, false);
                }
+            }
+
             return;
          }
 
@@ -509,7 +541,7 @@ void ArbolHeap::insertar(Persona person) {
 void ArbolHeap::construirMonticulo(QVector<Persona> persons){
     QVector<Persona> personas;
 
-    Persona p = Persona(0,"nulo","","","","","","");
+    Persona p = Persona(0,"nulo","","","","","");
     personas.append(p);
 
     for(Persona per : persons){  //Se acomoda la lista dada para que quede como si fuera [0, dato, dato, dato,...]

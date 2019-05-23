@@ -3,50 +3,36 @@
 
 #include "estructuras.h"
 #include <QtDebug>
+#include <stdlib.h>
+#include <string.h>
+#include <fstream>
+
+#include "email.h"
+#include "smtpclient.h"
+#include "emailaddress.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+    //MainWindow w;
+    //w.show();
 
-    Persona p1 = Persona(12,"Antony", "Artavia", "America", "Costa Rica", "Cristianismo protestante",
-                              "Otaku", "antonyartavia59@gmail.com");
+    Mundo *m = new Mundo();
 
-    Persona p2 = Persona(1,"Cristopher", "Mora", "America", "Costa Rica", "Cristianismo catolico",
-                              "Friky", "cristomora@gmail.com");
+    //for(QString p : m->paises) {
+        //qDebug() << m->lista->imprimir();
+    //}
 
-    Persona p3 = Persona(15,"Andres", "Artavia", "America", "Costa Rica", "Cristianismo",
-                              "Otaku", "andresartaviacr@gmail.com");
+    SMTPClient *cliente = new SMTPClient("smtp.gmail.com");
+    EmailAddress credenciales("antonyartavia59@gmail.com", "sbmr8520");
 
-    Persona p4 = Persona(23,"Angie", "Garcia", "America", "Costa Rica", "Budismo",
-                              "Modelo", "tamara677@gmail.com");
+    EmailAddress from("antonyartavia59@gmail.com");
 
-    Persona p5 = Persona(5,"Dillan", "Guzman", "America", "Costa Rica", "Ninguna",
-                              "Piloto", "dilguzdias@gmail.com");
+    EmailAddress to("antonyartavia59@gmail.com");
 
-    QVector<Persona> personas = {p1, p2, p3, p4, p5};
+    Email email(credenciales, from, to, "PROBANDO:", m->lista->imprimir());
 
-    ArbolHeap miMonticulo = ArbolHeap();
-
-    miMonticulo.insertar(p1);
-    miMonticulo.insertar(p2);
-    miMonticulo.insertar(p3);
-    miMonticulo.insertar(p4);
-    miMonticulo.insertar(p5);
-    miMonticulo.insertar(p1);
-
-    //miMonticulo.construirMonticulo(personas);
-
-    qDebug() << miMonticulo.recorrer();
-
-    qDebug()<<"";
-
-    //qDebug()<< miMonticulo.eliminarMin().nombre;
-    //qDebug()<< miMonticulo.eliminarMin().nombre;
-    //qDebug()<< miMonticulo.eliminarMin().nombre;
-    //qDebug()<< miMonticulo.eliminarMin().nombre;
-    //qDebug()<< miMonticulo.eliminarMin().nombre;
+    cliente->sendEmail(email);
 
 
     return a.exec();
