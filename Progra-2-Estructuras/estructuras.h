@@ -36,9 +36,10 @@ struct ListaPersonas{
         contNodos = 0;
     }
 
-    void insertarPersona(Persona*);
+    void insertarPersonaOrdenada(Persona*);
     Persona buscarPersona(int);
     QString imprimir();
+    void eliminarPrimero();
 };
 
 struct Persona{
@@ -96,12 +97,10 @@ struct Mundo{
         lectura(profesiones, "profesiones.txt");
         lectura(creencias, "creencias.txt");
         lista = new ListaPersonas();
-
-        crearPersonas();
     }
 
     void lectura(QString array[], string url);
-    void crearPersonas();
+    void crearPersonas(int cantidad);
 };
 
 
@@ -201,17 +200,22 @@ struct NodoHeap {
     NodoHeap(){
         sumapecados=0;
         identificacion = "";
+        familia = new ListaPersonas();
     }
 
     NodoHeap(QString id) {
         this->identificacion = id;
         sumapecados = 0;
+        familia = new ListaPersonas();
     }
 
     void agregarPersona(Persona *person) {
-        familia->insertarPersona(person);
+        //qDebug() << "Pero que?";
+        familia->insertarPersonaOrdenada(person);
+        //qDebug() << "Pero quex2?";
         for (int pecado : person->pecados) {
-         sumapecados += pecado;
+            //qDebug() << "Pero quex3?";
+            sumapecados += pecado;
         }
     }
 };
@@ -239,7 +243,60 @@ struct ArbolHeap {
 };
 
 struct Infierno {
-    AVL demonios[7];
+    ArbolHeap demonios[7];
+};
+
+struct AngelSec {
+    QString nombre;  //es uno de los nomres de la lista de ángeles
+    int version;     //es el número de ese angel en esa generación
+    int generacion; //es el nivel del árbol
+    Persona *humano;  //es un puntero al humano que fue salvado por el ángel.
+
+    QString nombres[10] = {"Miguel", "Nuriel", "Aniel", "Rafael", "Gabriel", "Shamsiel",
+                           "Raguel", "Uriel", "Azrael", "Sariel"};
+
+    AngelSec(int version, int generacion, ArbolHeap *personas) {
+        int ptr = rand()%10;
+        Persona *person = personas->listaHeap.takeAt(personas->listaHeap.length())->familia->ultimoNodo->persona;
+        this->nombre = nombres[ptr];
+        this->version = version;
+        this->generacion = generacion;
+        this->humano = person;
+    }
+
+    AngelSec() {
+        humano = nullptr;
+        version = generacion = 0;
+        nombre = "";
+    }
+};
+
+struct NodoTriario {
+    NodoTriario *izq;
+    NodoTriario *der;
+    NodoTriario *cen;
+    AngelSec *angel;
+
+    NodoTriario(AngelSec *angel) {
+        this->angel = angel;
+        izq = der = cen = nullptr;
+    }
+
+    NodoTriario() {
+        izq = der = cen = nullptr;
+        angel = nullptr;
+    }
+};
+
+struct ArbolAngeles {
+    NodoTriario *raiz;
+
+    ArbolAngeles () {
+        raiz = nullptr;
+    }
+
+    void rellenarPrimerosNiveles();
+    void crearAngeles(NodoTriario *raiz, int nivel, int version, ArbolHeap *infierno);
 };
 
 #endif // ESTRUCTURAS_H

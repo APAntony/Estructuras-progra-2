@@ -25,16 +25,28 @@ QString Persona::imprimir(){
     return msg;
 }
 
-void ListaPersonas::insertarPersona(Persona *persona){
+void ListaPersonas::insertarPersonaOrdenada(Persona *persona){
     if(primerNodo == nullptr){
         primerNodo = ultimoNodo = new NodoPersona(persona);
-        contNodos++;
-	}
-	else{
-        ultimoNodo->siguiente = new NodoPersona(persona);
-        ultimoNodo = ultimoNodo->siguiente;
-        contNodos++;
-	}
+    } else if(persona->id < primerNodo->persona->id) {
+        NodoPersona *nuevo = new NodoPersona(persona);
+        nuevo->siguiente = primerNodo;
+        primerNodo = nuevo;
+    } else if(persona->id > ultimoNodo->persona->id){
+        NodoPersona *nuevo = new NodoPersona(persona);
+        ultimoNodo->siguiente = nuevo;
+        ultimoNodo = nuevo;
+    } else {
+        NodoPersona *tmp = primerNodo;
+        NodoPersona *nuevo = new NodoPersona(persona);
+        while (tmp->persona->id < nuevo->persona->id) {
+            tmp = tmp->siguiente;
+        }
+
+        nuevo->siguiente = tmp->siguiente;
+        tmp->siguiente = nuevo;
+    }
+    contNodos++;
 }
 
 QString ListaPersonas::imprimir(){
@@ -71,7 +83,7 @@ void Mundo::lectura(QString array[], string url) {
     archivo.close();  //Cerramos el archivo
 }
 
-void Mundo::crearPersonas(){
+void Mundo::crearPersonas(int cantidad){
     int ptrnombre = 0;
     int ptrcreencias = 0;
     int ptrprofesiones = 0;
@@ -85,7 +97,7 @@ void Mundo::crearPersonas(){
     //qDebug()<<"estoy sirviendo3";
 
     int i = 0;
-    while (i < 100) {
+    while (i < cantidad) {
         //qDebug()<<"estoy sirviendo while"<<i;
         ptrnombre = rand()%1000;
         ptrpaises = rand()%100;
@@ -118,7 +130,7 @@ void Mundo::crearPersonas(){
             person->continente = "Africa";
         }
 
-        lista->insertarPersona(person);
+        lista->insertarPersonaOrdenada(person);
         i++;
     }
 }
@@ -600,7 +612,7 @@ NodoHeap* ArbolHeap::buscarFamilia(QString apellido_pais) {
 
 int ArbolHeap::buscarUbiacion(QString apellido_pais) {
     for (int i=0; i <= listaHeap.length(); i++) {
-        if(listaHeap.takeAt(i)->identificacion == apellido_pais) {
+        if(listaHeap.at(i)->identificacion == apellido_pais) {
             return i;
         }
     }
@@ -608,29 +620,34 @@ int ArbolHeap::buscarUbiacion(QString apellido_pais) {
 }
 
 void ArbolHeap::insertarNuevo(QString familia_pais, Persona *person) {
-    qDebug()<<"Estoy bien3";
+    //qDebug()<<"Pero que?3";
     NodoHeap *nuevo = new NodoHeap(familia_pais);
-    qDebug()<<"Estoy bien4";
+    //qDebug()<<"Pero que?4";
     nuevo->agregarPersona(person);
-    qDebug()<<"Estoy bien5";
+    //qDebug()<<"Pero que?5";
     listaHeap.append(nuevo);
-    qDebug()<<"Estoy bien6";
+    //qDebug()<<"Pero que?6";
     tamanoActual = tamanoActual+1;
-    qDebug()<<"Estoy bien7";
+    //qDebug()<<"Pero que?7";
+    //qDebug()<<"Tamaño actual del monticulo: "<<tamanoActual;
+    //qDebug()<<"Verdadero tamano del monticulo: "<<listaHeap.length();
     infiltArriba(tamanoActual);
+    //qDebug()<<"Tamaño despues de infil: "<<listaHeap.length();
 }
 
 
 
 void ArbolHeap::insertar(Persona *person) {
-    qDebug()<<"Estoy bien";
     if(buscarFamilia(person->apellido + "-" + person->pais) == nullptr) {
-        qDebug()<<"Estoy bien2";
+        //qDebug()<<"Estoy bien";
         insertarNuevo(person->apellido + "-" + person->pais, person);      //inserta un nuevo nodo.
     } else {
+        //qDebug()<<"Estoy bien2";
         NodoHeap *tmp = buscarFamilia(person->apellido + "-" + person->pais);
         tmp->agregarPersona(person);                    // inserta una persona en un nodo existente.
+        //qDebug()<<buscarUbiacion(person->apellido + "-" + person->pais);//infiltArriba(buscarUbiacion(person->apellido + "-" + person->pais)-1);
         infiltArriba(buscarUbiacion(person->apellido + "-" + person->pais));
+        //qDebug()<<"Tamaño despues de infil: "<<listaHeap.length();
     }
 }
 
@@ -663,3 +680,25 @@ QString ArbolHeap::recorrer(){
     return msg;
 }
 
+void ArbolAngeles::rellenarPrimerosNiveles() {
+    raiz = new NodoTriario();
+    raiz->izq = new NodoTriario();
+    raiz->cen = new NodoTriario();
+    raiz->der = new NodoTriario();
+}
+
+/**
+ * @brief ArbolAngeles::crearAngeles
+ * @param raiz
+ * @param nivel  debe ser 0
+ * @param version debe ser 1
+ * @param infierno
+ */
+void ArbolAngeles::crearAngeles(NodoTriario *raiz, int nivel, int version, ArbolHeap *infierno) {
+    if(raiz->izq == nullptr && raiz->cen == nullptr && raiz->der == nullptr) {
+        AngelSec *angelIzq = new AngelSec(version, nivel, infierno);
+        raiz->izq = new NodoTriario(angelIzq);
+    } else {
+
+    }
+}

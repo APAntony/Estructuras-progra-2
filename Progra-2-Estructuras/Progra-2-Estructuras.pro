@@ -25,19 +25,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-        email.cpp \
-        emailaddress.cpp \
         estructuras.cpp \
         main.cpp \
         mainwindow.cpp \
-        smtpclient.cpp
+        smtp.cpp
 
 HEADERS += \
-        email.h \
-        emailaddress.h \
         estructuras.h \
         mainwindow.h \
-        smtpclient.h
+        smtp.h
 
 FORMS += \
         mainwindow.ui

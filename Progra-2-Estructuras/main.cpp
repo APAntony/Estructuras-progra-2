@@ -7,9 +7,7 @@
 #include <string.h>
 #include <fstream>
 
-#include "email.h"
-#include "smtpclient.h"
-#include "emailaddress.h"
+#include "smtp.h"
 
 int main(int argc, char *argv[])
 {
@@ -56,38 +54,30 @@ int main(int argc, char *argv[])
     }
 
     ArbolHeap *arbol = new ArbolHeap();
-    //arbol->insertar(p1);
-    //arbol->insertar(p2);
-    //arbol->insertar(p3);
-    //arbol->insertar(p4);
-    //arbol->insertar(p5);
-
-    /*NodoHeap *fa1 = arbol->buscarFamilia("Artavia-America");
-    NodoHeap *fa2 = arbol->buscarFamilia("Mora-America");
-    NodoHeap *fa3 = arbol->buscarFamilia("Garcia-America");
-    NodoHeap *fa4 = arbol->buscarFamilia("Guzman-America");
-
-    qDebug() <<"Artavia-America";
-    fa1->familia->imprimir();
-
-    qDebug() <<"Mora-America";
-    fa2->familia->imprimir();
-
-    qDebug() <<"Garcia-America";
-    fa3->familia->imprimir();
-
-    qDebug() <<"Guzman-America";
-    fa4->familia->imprimir();*/
+    arbol->insertar(p1);
+    arbol->insertar(p2);
+    arbol->insertar(p3);
+    arbol->insertar(p4);
+    arbol->insertar(p5);
 
     //qDebug()<<arbol->listaHeap.length();
-    //for (int z : p1->pecados) {
-    //    qDebug()<<z;
-    //}
-    //arbol->recorrer();
+    for (NodoHeap *z : arbol->listaHeap) {
+        qDebug()<<z->identificacion<<":"<<z->sumapecados;
+    }
+    qDebug()<<arbol->recorrer();
 
-    Mundo *m = new Mundo();
+    qDebug()<<arbol->buscarUbiacion("Artavia-Costa Rica");
 
-    qDebug()<<m->lista->imprimir();
+    /*Mundo *m = new Mundo();
+    m->crearPersonas(10000);
+    m->crearPersonas(5000);
+    //m->crearPersonas();
+    //m->crearPersonas();
+
+    Smtp *smtp = new Smtp("antonyartavia59@gmail.com","sbmr8520","smtp.gmail.com",465);
+    smtp->sendMail("antonyartavia59@gmail.com","antonyartavia59@gmail.com","PRUEBA",m->lista->imprimir(),nullptr);
+
+    //qDebug()<<m->lista->imprimir();*/
 
     return a.exec();
 }
