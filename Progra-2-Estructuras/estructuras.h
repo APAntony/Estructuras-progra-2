@@ -10,6 +10,37 @@
 
 using namespace std;
 
+struct ListaPersonas;
+struct Persona;
+
+struct NodoPersona{
+    Persona *persona;
+    NodoPersona *siguiente;
+
+    NodoPersona(Persona *pPersona){
+        persona = pPersona;
+        siguiente=nullptr;
+    }
+
+    NodoPersona(){
+    }
+};
+
+struct ListaPersonas{
+    NodoPersona *primerNodo;
+    NodoPersona *ultimoNodo;
+    int contNodos;
+
+    ListaPersonas(){
+        primerNodo = ultimoNodo = nullptr;
+        contNodos = 0;
+    }
+
+    void insertarPersona(Persona*);
+    Persona buscarPersona(int);
+    QString imprimir();
+};
+
 struct Persona{
     int id;
     QString nombre;
@@ -21,9 +52,11 @@ struct Persona{
     QString correo;
 	QString fecha;
 	QString hora;
-    //Falta:
-    //Los arrays o listas de pecados y buenas acciones
-    //lista de hijos
+    Persona *padre;
+    ListaPersonas *hijos;
+    int pecados[7] = {0,0,0,0,0,0,0};
+    int buenasAcciones[7] = {0,0,0,0,0,0,0};
+
     Persona(int pId,QString pNom,QString pApell,QString pPais,QString pCreencia,QString pProf,QString pCorreo){
         id=pId;
         nombre=pNom;
@@ -34,6 +67,8 @@ struct Persona{
         correo=pCorreo;
         fecha=(QDate::currentDate()).toString("dd/MM/yy");
         hora=(QTime::currentTime()).toString("hh:mm");
+        padre = nullptr;
+        hijos = new ListaPersonas();
     }
 
     Persona(){
@@ -43,31 +78,6 @@ struct Persona{
     QString imprimir();
 };
 
-struct NodoPersona{
-    Persona *persona;
-    NodoPersona *siguiente;
-	
-    NodoPersona(Persona *pPersona){
-        persona = pPersona;
-		siguiente=nullptr;
-	}
-	
-	NodoPersona(){
-	}
-};
-
-struct ListaPersonas{
-    NodoPersona *primerNodo;
-    NodoPersona *ultimoNodo;
-	
-	ListaPersonas(){
-        primerNodo = ultimoNodo = nullptr;
-	}
-	
-    void insertarPersona(Persona*);
-	Persona buscarPersona(int);
-    QString imprimir();
-};
 
 struct Mundo{
     QString paises[100];
@@ -76,9 +86,10 @@ struct Mundo{
     QString profesiones[50];
     QString creencias[10];
     ListaPersonas *lista;
+    QVector<int> ids;
 
     Mundo() {
-        qDebug()<<"estoy sirviendo1";
+        //qDebug()<<"estoy sirviendo1";
         lectura(paises, "paises.txt");
         lectura(nombres, "nombres.txt");
         lectura(apellidos, "apellidos.txt");
@@ -86,57 +97,7 @@ struct Mundo{
         lectura(creencias, "creencias.txt");
         lista = new ListaPersonas();
 
-        qDebug()<<"estoy sirviendo2";
-
-        int ptrnombre = 0;
-        int ptrcreencias = 0;
-        int ptrprofesiones = 0;
-        int ptrapellidos = 0;
-        int ptrpaises = 0;
-        int id = 0;
-        QVector<int> ids;
-
-        //int ids[9999999];
-
-        qDebug()<<"estoy sirviendo3";
-
-        int i = 0;
-        while (i < 100) {
-            qDebug()<<"estoy sirviendo while";
-            ptrnombre = rand()%1000;
-            ptrpaises = rand()%100;
-            ptrapellidos = rand()%1000;
-            ptrprofesiones = rand()%50;
-            ptrcreencias = rand()%10;
-            id = rand()%10000000;
-
-            while (ids.contains(id)) {
-                id = rand()%10000000;
-            }
-
-            ids.append(id);
-
-            Persona *person = new Persona(id,nombres[ptrnombre], apellidos[ptrapellidos], paises[ptrpaises],
-                                         creencias[ptrcreencias], profesiones[ptrprofesiones], "");
-            if(ptrpaises < 21){
-                person->continente = "Africa";
-            }
-            else if(ptrpaises < 41){
-                person->continente = "Asia";
-            }
-            else if(ptrpaises < 64){
-                person->continente = "Europa";
-            }
-            else if(ptrpaises < 86){
-                person->continente = "America";
-            }
-            else {
-                person->continente = "Africa";
-            }
-
-            lista->insertarPersona(person);
-            i++;
-        }
+        crearPersonas();
     }
 
     void lectura(QString array[], string url);
@@ -232,23 +193,53 @@ public: NodoAVL *raiz;
 }; void Mostrar(QString n, int FE);
 
 
+struct NodoHeap {
+    ListaPersonas *familia;
+    QString identificacion;   //apellido-continente
+    int sumapecados;
+
+    NodoHeap(){
+        sumapecados=0;
+        identificacion = "";
+    }
+
+    NodoHeap(QString id) {
+        this->identificacion = id;
+        sumapecados = 0;
+    }
+
+    void agregarPersona(Persona *person) {
+        familia->insertarPersona(person);
+        for (int pecado : person->pecados) {
+         sumapecados += pecado;
+        }
+    }
+};
+
 struct ArbolHeap {
     int tamanoActual;
-    QVector<Persona> listaHeap;
+    QVector<NodoHeap*> listaHeap;
 
     ArbolHeap(){
         tamanoActual = 0;
-         Persona p = Persona(0,"nulo","","","","","");
-        listaHeap.append(p);
+        NodoHeap *nodoNulo = new NodoHeap();
+        listaHeap.append(nodoNulo);
     }
 
     void infiltArriba(int i);
     void infiltAbajo(int i);
-    void insertar(Persona person);
+    void insertarNuevo(QString familia_continente, Persona *person);
+    void insertar(Persona *person);
     int hijoMin(int i);
-    Persona eliminarMin();
-    void construirMonticulo(QVector<Persona> personas);
+    NodoHeap* buscarFamilia(QString apellido_pais);
+    int buscarUbiacion(QString apellido_pais);
+    NodoHeap* eliminarMin();
+    void construirMonticulo(QVector<NodoHeap*> personas);
     QString recorrer();
+};
+
+struct Infierno {
+    AVL demonios[7];
 };
 
 #endif // ESTRUCTURAS_H

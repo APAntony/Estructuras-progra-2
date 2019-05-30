@@ -28,10 +28,12 @@ QString Persona::imprimir(){
 void ListaPersonas::insertarPersona(Persona *persona){
     if(primerNodo == nullptr){
         primerNodo = ultimoNodo = new NodoPersona(persona);
+        contNodos++;
 	}
 	else{
         ultimoNodo->siguiente = new NodoPersona(persona);
         ultimoNodo = ultimoNodo->siguiente;
+        contNodos++;
 	}
 }
 
@@ -67,6 +69,58 @@ void Mundo::lectura(QString array[], string url) {
     }
 
     archivo.close();  //Cerramos el archivo
+}
+
+void Mundo::crearPersonas(){
+    int ptrnombre = 0;
+    int ptrcreencias = 0;
+    int ptrprofesiones = 0;
+    int ptrapellidos = 0;
+    int ptrpaises = 0;
+    int id = 0;
+    //QVector<int> ids;
+
+    //int ids[9999999];
+
+    //qDebug()<<"estoy sirviendo3";
+
+    int i = 0;
+    while (i < 100) {
+        //qDebug()<<"estoy sirviendo while"<<i;
+        ptrnombre = rand()%1000;
+        ptrpaises = rand()%100;
+        ptrapellidos = rand()%1000;
+        ptrprofesiones = rand()%50;
+        ptrcreencias = rand()%10;
+        id = rand()%10000000;
+
+        while (this->ids.contains(id)) {
+            id = rand()%10000000;
+        }
+
+        this->ids.append(id);
+
+        Persona *person = new Persona(id,nombres[ptrnombre], apellidos[ptrapellidos], paises[ptrpaises],
+                                     creencias[ptrcreencias], profesiones[ptrprofesiones], "");
+        if(ptrpaises < 21){
+            person->continente = "Africa";
+        }
+        else if(ptrpaises < 41){
+            person->continente = "Asia";
+        }
+        else if(ptrpaises < 64){
+            person->continente = "Europa";
+        }
+        else if(ptrpaises < 86){
+            person->continente = "America";
+        }
+        else {
+            person->continente = "Africa";
+        }
+
+        lista->insertarPersona(person);
+        i++;
+    }
 }
 
 
@@ -484,12 +538,14 @@ void Mostrar(QString n, int FE) {
 
 // FIN ARBOL AVL
 
+
+
 // INICIO ARBOL HEAP
 
 void ArbolHeap::infiltArriba(int i){
     while ((i/2) > 0) {
-        if (listaHeap[i].id > listaHeap[i/2].id) {
-            Persona tmp = listaHeap[i/2];
+        if (listaHeap[i]->sumapecados > listaHeap[i/2]->sumapecados) {
+            NodoHeap *tmp = listaHeap[i/2];
             listaHeap[i/2] = listaHeap[i];
             listaHeap[i] = tmp;
         }
@@ -501,8 +557,8 @@ void ArbolHeap::infiltArriba(int i){
 void ArbolHeap::infiltAbajo(int i){
     while ((i*2) <= tamanoActual) {
         int hm = hijoMin(i);
-        if (listaHeap[i].id < listaHeap[hm].id) {
-            Persona tmp = listaHeap[i];
+        if (listaHeap[i]->sumapecados < listaHeap[hm]->sumapecados) {
+            NodoHeap *tmp = listaHeap[i];
             listaHeap[i] = listaHeap[hm];
             listaHeap[hm] = tmp;
         }
@@ -515,7 +571,7 @@ int ArbolHeap::hijoMin(int i){
         return i*2;
     }
     else {
-        if (listaHeap[i*2].id < listaHeap[i*2+1].id) {
+        if (listaHeap[i*2]->sumapecados < listaHeap[i*2+1]->sumapecados) {
             return i*2;
         } else {
             return i*2+1;
@@ -523,8 +579,8 @@ int ArbolHeap::hijoMin(int i){
     }
 }
 
-Persona ArbolHeap::eliminarMin(){
-    Persona valorSacado = listaHeap[1];
+NodoHeap* ArbolHeap::eliminarMin(){
+    NodoHeap *valorSacado = listaHeap[1];
     listaHeap[1] = listaHeap[tamanoActual];
     tamanoActual = tamanoActual-1;
     listaHeap.pop_back();
@@ -532,19 +588,59 @@ Persona ArbolHeap::eliminarMin(){
     return valorSacado;
 }
 
-void ArbolHeap::insertar(Persona person) {
-    listaHeap.append(person);
+NodoHeap* ArbolHeap::buscarFamilia(QString apellido_pais) {
+    for (NodoHeap* nodo : listaHeap) {
+        if(nodo->identificacion == apellido_pais) {
+            return nodo;
+        }
+    }
+
+    return nullptr;
+}
+
+int ArbolHeap::buscarUbiacion(QString apellido_pais) {
+    for (int i=0; i <= listaHeap.length(); i++) {
+        if(listaHeap.takeAt(i)->identificacion == apellido_pais) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void ArbolHeap::insertarNuevo(QString familia_pais, Persona *person) {
+    qDebug()<<"Estoy bien3";
+    NodoHeap *nuevo = new NodoHeap(familia_pais);
+    qDebug()<<"Estoy bien4";
+    nuevo->agregarPersona(person);
+    qDebug()<<"Estoy bien5";
+    listaHeap.append(nuevo);
+    qDebug()<<"Estoy bien6";
     tamanoActual = tamanoActual+1;
+    qDebug()<<"Estoy bien7";
     infiltArriba(tamanoActual);
 }
 
-void ArbolHeap::construirMonticulo(QVector<Persona> persons){
-    QVector<Persona> personas;
 
-    Persona p = Persona(0,"nulo","","","","","");
+
+void ArbolHeap::insertar(Persona *person) {
+    qDebug()<<"Estoy bien";
+    if(buscarFamilia(person->apellido + "-" + person->pais) == nullptr) {
+        qDebug()<<"Estoy bien2";
+        insertarNuevo(person->apellido + "-" + person->pais, person);      //inserta un nuevo nodo.
+    } else {
+        NodoHeap *tmp = buscarFamilia(person->apellido + "-" + person->pais);
+        tmp->agregarPersona(person);                    // inserta una persona en un nodo existente.
+        infiltArriba(buscarUbiacion(person->apellido + "-" + person->pais));
+    }
+}
+
+void ArbolHeap::construirMonticulo(QVector<NodoHeap*> persons){
+    QVector<NodoHeap*> personas;
+
+    NodoHeap *p = new NodoHeap();
     personas.append(p);
 
-    for(Persona per : persons){  //Se acomoda la lista dada para que quede como si fuera [0, dato, dato, dato,...]
+    for(NodoHeap *per : persons){  //Se acomoda la lista dada para que quede como si fuera [0, dato, dato, dato,...]
         personas.append(per);
     }
 
@@ -561,7 +657,7 @@ QString ArbolHeap::recorrer(){
     QString msg = "";
 
     for (int i = 1; i <= tamanoActual; i++) {
-        msg += listaHeap[i].nombre + '\n';
+        msg += listaHeap[i]->identificacion + '\n';
     }
 
     return msg;
