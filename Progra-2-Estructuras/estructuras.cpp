@@ -26,7 +26,7 @@ QString Persona::imprimir(){
 }
 
 void ListaPersonas::insertarPersonaOrdenada(Persona *persona){
-    if(primerNodo == nullptr){
+    if(primerNodo == nullptr) {
         primerNodo = ultimoNodo = new NodoPersona(persona);
     } else if(persona->id < primerNodo->persona->id) {
         NodoPersona *nuevo = new NodoPersona(persona);
@@ -39,7 +39,7 @@ void ListaPersonas::insertarPersonaOrdenada(Persona *persona){
     } else {
         NodoPersona *tmp = primerNodo;
         NodoPersona *nuevo = new NodoPersona(persona);
-        while (tmp->persona->id < nuevo->persona->id) {
+        while (tmp->siguiente->persona->id < nuevo->persona->id) {
             tmp = tmp->siguiente;
         }
 
@@ -619,35 +619,24 @@ int ArbolHeap::buscarUbiacion(QString apellido_pais) {
     return -1;
 }
 
-void ArbolHeap::insertarNuevo(QString familia_pais, Persona *person) {
+void ArbolHeap::insertarNuevo(QString familia_pais, Persona *person, int pecado) {
     //qDebug()<<"Pero que?3";
     NodoHeap *nuevo = new NodoHeap(familia_pais);
-    //qDebug()<<"Pero que?4";
-    nuevo->agregarPersona(person);
-    //qDebug()<<"Pero que?5";
+    nuevo->agregarPersona(person, pecado);
     listaHeap.append(nuevo);
-    //qDebug()<<"Pero que?6";
     tamanoActual = tamanoActual+1;
-    //qDebug()<<"Pero que?7";
-    //qDebug()<<"Tamaño actual del monticulo: "<<tamanoActual;
-    //qDebug()<<"Verdadero tamano del monticulo: "<<listaHeap.length();
     infiltArriba(tamanoActual);
-    //qDebug()<<"Tamaño despues de infil: "<<listaHeap.length();
 }
 
 
 
-void ArbolHeap::insertar(Persona *person) {
+void ArbolHeap::insertar(Persona *person, int pecado) {
     if(buscarFamilia(person->apellido + "-" + person->pais) == nullptr) {
-        //qDebug()<<"Estoy bien";
-        insertarNuevo(person->apellido + "-" + person->pais, person);      //inserta un nuevo nodo.
+        insertarNuevo(person->apellido + "-" + person->pais, person, pecado);      //inserta un nuevo nodo.
     } else {
-        //qDebug()<<"Estoy bien2";
         NodoHeap *tmp = buscarFamilia(person->apellido + "-" + person->pais);
-        tmp->agregarPersona(person);                    // inserta una persona en un nodo existente.
-        //qDebug()<<buscarUbiacion(person->apellido + "-" + person->pais);//infiltArriba(buscarUbiacion(person->apellido + "-" + person->pais)-1);
+        tmp->agregarPersona(person, pecado);                    // inserta una persona en un nodo existente.
         infiltArriba(buscarUbiacion(person->apellido + "-" + person->pais));
-        //qDebug()<<"Tamaño despues de infil: "<<listaHeap.length();
     }
 }
 
@@ -679,6 +668,33 @@ QString ArbolHeap::recorrer(){
 
     return msg;
 }
+//FIN DE ARBOL HEAP
+
+
+//INICIO DE INFIERNO
+int Infierno::consultarCantidadHumanos(){
+    int contador = 0;
+    for(ArbolHeap *demonio : demonios) {
+        for(NodoHeap *family : demonio->listaHeap) {
+            contador += family->familia->contNodos;
+        }
+    }
+
+    return contador;
+}
+
+int Infierno::consultarPromedioDePecados() {
+    int sumaDePecados = 0;
+    for(ArbolHeap *demonio : demonios) {
+        for(NodoHeap *family : demonio->listaHeap) {
+            sumaDePecados += family->sumapecados;
+        }
+    }
+
+    return sumaDePecados/consultarCantidadHumanos();
+}
+
+//FIN DEL INFIERNO
 
 void ArbolAngeles::rellenarPrimerosNiveles() {
     raiz = new NodoTriario();
@@ -689,16 +705,25 @@ void ArbolAngeles::rellenarPrimerosNiveles() {
 
 /**
  * @brief ArbolAngeles::crearAngeles
- * @param raiz
- * @param nivel  debe ser 0
- * @param version debe ser 1
+ * @param raiz  debe ser
+ * @param nivel  siempre debe ser 0
+ * @param version siempre debe ser 1
  * @param infierno
  */
 void ArbolAngeles::crearAngeles(NodoTriario *raiz, int nivel, int version, ArbolHeap *infierno) {
     if(raiz->izq == nullptr && raiz->cen == nullptr && raiz->der == nullptr) {
-        AngelSec *angelIzq = new AngelSec(version, nivel, infierno);
+        AngelSec *angelIzq = new AngelSec(version, nivel++, infierno);
+        //AngelSec *angelIzq = new AngelSec(version, nivel, infierno);
+        //AngelSec *angelIzq = new AngelSec(version, nivel, infierno);
+
         raiz->izq = new NodoTriario(angelIzq);
     } else {
 
     }
+}
+
+
+
+void ABBMundo::crearArbol(int tamano) {
+
 }

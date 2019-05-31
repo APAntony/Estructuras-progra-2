@@ -54,30 +54,40 @@ int main(int argc, char *argv[])
     }
 
     ArbolHeap *arbol = new ArbolHeap();
-    arbol->insertar(p1);
-    arbol->insertar(p2);
-    arbol->insertar(p3);
-    arbol->insertar(p4);
-    arbol->insertar(p5);
+    Infierno *infi = new Infierno();
+
+    infi->demonios[0]->insertar(p1, 0);
+    infi->demonios[0]->insertar(p2, 0);
+    infi->demonios[0]->insertar(p3, 0);
+    infi->demonios[0]->insertar(p4, 0);
+    infi->demonios[0]->insertar(p5, 0);
 
     //qDebug()<<arbol->listaHeap.length();
-    for (NodoHeap *z : arbol->listaHeap) {
-        qDebug()<<z->identificacion<<":"<<z->sumapecados;
+    //for (NodoHeap *z : arbol->listaHeap) {
+        //qDebug()<<z->identificacion<<":"<<z->sumapecados;
+    //}
+    for(NodoHeap *nod : infi->demonios[0]->listaHeap) {
+        qDebug()<<nod->identificacion<<":"<<nod->sumapecados;
     }
-    qDebug()<<arbol->recorrer();
 
-    qDebug()<<arbol->buscarUbiacion("Artavia-Costa Rica");
 
-    /*Mundo *m = new Mundo();
-    m->crearPersonas(10000);
-    m->crearPersonas(5000);
+    qDebug()<<infi->demonios[0]->recorrer();
+    qDebug()<<infi->consultarCantidadHumanos();
+    qDebug()<<infi->consultarPromedioDePecados();
+
+
+    //qDebug()<<arbol->buscarUbiacion("Artavia-Costa Rica");
+
+    //Mundo *m = new Mundo();
+    //m->crearPersonas(10000);
+    //m->crearPersonas(5000);
     //m->crearPersonas();
     //m->crearPersonas();
 
-    Smtp *smtp = new Smtp("antonyartavia59@gmail.com","sbmr8520","smtp.gmail.com",465);
-    smtp->sendMail("antonyartavia59@gmail.com","antonyartavia59@gmail.com","PRUEBA",m->lista->imprimir(),nullptr);
+    //Smtp *smtp = new Smtp("antonyartavia59@gmail.com","sbmr8520","smtp.gmail.com",465);
+    //smtp->sendMail("antonyartavia59@gmail.com","antonyartavia59@gmail.com","PRUEBA",m->lista->imprimir(),nullptr);
 
-    //qDebug()<<m->lista->imprimir();*/
+    //qDebug()<<m->lista->imprimir();
 
     return a.exec();
 }
