@@ -591,7 +591,7 @@ int ArbolHeap::hijoMin(int i){
     }
 }
 
-NodoHeap* ArbolHeap::eliminarMin(){
+NodoHeap* ArbolHeap::eliminarMin() {
     NodoHeap *valorSacado = listaHeap[1];
     listaHeap[1] = listaHeap[tamanoActual];
     tamanoActual = tamanoActual-1;
@@ -672,7 +672,44 @@ QString ArbolHeap::recorrer(){
 
 
 //INICIO DE INFIERNO
-int Infierno::consultarCantidadHumanos(){
+QString Infierno::consultarDemonioPecado() {
+    QString msg = "";
+
+    for(int i=0; i<7; i++) {
+        if(i==0){
+            msg += "Lucifer";
+        }
+        else if (i==1) {
+            msg += "Belcebu";
+        }
+        else if (i==2) {
+            msg += "Satan";
+        }
+        else if (i==3) {
+            msg += "Abadon";
+        }
+        else if (i==4){
+            msg += "Mammon";
+        }
+        else if (i==5) {
+            msg += "Belfegor";
+        }
+        else if (i==6) {
+            msg += "Asmodeo";
+        }
+
+        int cont = 0;
+        for(NodoHeap *tmp : demonios[i]->listaHeap) {
+            cont += tmp->sumapecados;
+        }
+
+        msg += ": "+ QString::number(cont) + "\n";
+    }
+
+    return msg;
+}
+
+QString Infierno::consultarCantidadHumanos(){
     int contador = 0;
     for(ArbolHeap *demonio : demonios) {
         for(NodoHeap *family : demonio->listaHeap) {
@@ -680,10 +717,24 @@ int Infierno::consultarCantidadHumanos(){
         }
     }
 
+    QString msg = "Cantidad de Humanos en el infierno: " + QString::number(contador);
+
+    return msg;
+}
+
+int Infierno::consultarCantidadHumanosInt(){
+    int contador = 0;
+    for(ArbolHeap *demonio : demonios) {
+        for(NodoHeap *family : demonio->listaHeap) {
+            contador += family->familia->contNodos;
+        }
+    }
+
+
     return contador;
 }
 
-int Infierno::consultarPromedioDePecados() {
+QString Infierno::consultarPromedioDePecados() {
     int sumaDePecados = 0;
     for(ArbolHeap *demonio : demonios) {
         for(NodoHeap *family : demonio->listaHeap) {
@@ -691,7 +742,73 @@ int Infierno::consultarPromedioDePecados() {
         }
     }
 
-    return sumaDePecados/consultarCantidadHumanos();
+    int total = sumaDePecados/consultarCantidadHumanosInt();
+    QString msg = "Promedio de pecados en el infierno: " + QString::number(total);
+
+    return msg;
+}
+
+QString Infierno::consultarMaximoDePecados() {
+    int total = 0;
+    for(ArbolHeap *demonio : demonios) {
+        total += demonio->listaHeap[1]->sumapecados;   //Suma los pecados de los mas pecadores de los demonios
+    }
+
+    QString msg = "Maximo numero de pecados en el infierno: " + QString::number(total);
+
+    return msg;
+}
+
+QString Infierno::consultarMinimoDePecados() {
+    int total = 0;
+    for(ArbolHeap *demonio : demonios) { //ultima posicion del heap
+        total += demonio->listaHeap[demonio->listaHeap.length()]->sumapecados;
+    }   //Suma los pecados de los menos pecadores de los demonios
+
+    QString msg = "Minimo numero de pecados en el infierno: " + QString::number(total);
+
+    return msg;
+}
+
+QString Infierno::consultarMasPecadoresMenosPecadores() {
+    QString msg = "";
+    for(int i=0; i<7; i++) {
+        if(i==0){
+            msg += "-----------------Lucifer-----------------";
+        }
+        else if (i==1) {
+            msg += "-----------------Belcebu-----------------";
+        }
+        else if (i==2) {
+            msg += "-----------------Satan-----------------";
+        }
+        else if (i==3) {
+            msg += "-----------------Abadon-----------------";
+        }
+        else if (i==4){
+            msg += "-----------------Mammon-----------------";
+        }
+        else if (i==5) {
+            msg += "-----------------Belfegor-----------------";
+        }
+        else if (i==6) {
+            msg += "-----------------Asmodeo-----------------";
+        }
+
+        for(NodoHeap *tmp : demonios[i]->listaHeap) {
+            //msg += "----Familia: " + tmp->identificacion+"----\n";
+            NodoPersona *nodoTmp = tmp->familia->primerNodo;
+            while(nodoTmp != nullptr) {
+                msg += nodoTmp->persona->imprimir() +"Pecados:"+
+                        QString::number(nodoTmp->persona->pecados[i] - nodoTmp->persona->buenasAcciones[i]) +"\n";
+                nodoTmp = nodoTmp->siguiente;
+            }
+        }
+
+        msg += "\n\n";
+    }
+
+    return msg;
 }
 
 //FIN DEL INFIERNO

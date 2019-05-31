@@ -12,6 +12,8 @@ using namespace std;
 
 struct ListaPersonas;
 struct Persona;
+struct NodoPecado;
+struct ListaPecados;
 
 struct NodoPersona{
     Persona *persona;
@@ -249,10 +251,12 @@ struct Infierno {
 
     void condenar();
     QString consultarDemonioPecado();
-    int consultarCantidadHumanos();
-    int consultarPromedioDePecados();
-    int consultarMaximoDePecados();
-    int consultarMinimoDePecados();
+    QString consultarCantidadHumanos();
+    int consultarCantidadHumanosInt();
+    QString consultarPromedioDePecados();
+    QString consultarMaximoDePecados();
+    QString consultarMinimoDePecados();
+    QString consultarMasPecadoresMenosPecadores();
 };
 
 struct AngelSec {

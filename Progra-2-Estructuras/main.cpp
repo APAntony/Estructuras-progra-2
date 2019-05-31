@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
                                   "Piloto", "dilguzdias@gmail.com");
 
 
+
     for (int i=0; i < 7 ; i++) {
         p1->pecados[i] = 12;
     }
@@ -74,6 +75,9 @@ int main(int argc, char *argv[])
     qDebug()<<infi->demonios[0]->recorrer();
     qDebug()<<infi->consultarCantidadHumanos();
     qDebug()<<infi->consultarPromedioDePecados();
+    //qDebug()<<infi->consultarMaximoDePecados();
+    qDebug()<<infi->consultarDemonioPecado();
+    qDebug()<<infi->consultarMasPecadoresMenosPecadores();
 
 
     //qDebug()<<arbol->buscarUbiacion("Artavia-Costa Rica");
