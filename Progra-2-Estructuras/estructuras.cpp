@@ -26,7 +26,7 @@ QString Persona::imprimir(){
 }
 
 void ListaPersonas::insertarPersonaOrdenada(Persona *persona){
-    if(primerNodo == nullptr){
+    if(primerNodo == nullptr) {
         primerNodo = ultimoNodo = new NodoPersona(persona);
     } else if(persona->id < primerNodo->persona->id) {
         NodoPersona *nuevo = new NodoPersona(persona);
@@ -39,7 +39,7 @@ void ListaPersonas::insertarPersonaOrdenada(Persona *persona){
     } else {
         NodoPersona *tmp = primerNodo;
         NodoPersona *nuevo = new NodoPersona(persona);
-        while (tmp->persona->id < nuevo->persona->id) {
+        while (tmp->siguiente->persona->id < nuevo->persona->id) {
             tmp = tmp->siguiente;
         }
 
@@ -591,7 +591,7 @@ int ArbolHeap::hijoMin(int i){
     }
 }
 
-NodoHeap* ArbolHeap::eliminarMin(){
+NodoHeap* ArbolHeap::eliminarMin() {
     NodoHeap *valorSacado = listaHeap[1];
     listaHeap[1] = listaHeap[tamanoActual];
     tamanoActual = tamanoActual-1;
@@ -619,35 +619,24 @@ int ArbolHeap::buscarUbiacion(QString apellido_pais) {
     return -1;
 }
 
-void ArbolHeap::insertarNuevo(QString familia_pais, Persona *person) {
+void ArbolHeap::insertarNuevo(QString familia_pais, Persona *person, int pecado) {
     //qDebug()<<"Pero que?3";
     NodoHeap *nuevo = new NodoHeap(familia_pais);
-    //qDebug()<<"Pero que?4";
-    nuevo->agregarPersona(person);
-    //qDebug()<<"Pero que?5";
+    nuevo->agregarPersona(person, pecado);
     listaHeap.append(nuevo);
-    //qDebug()<<"Pero que?6";
     tamanoActual = tamanoActual+1;
-    //qDebug()<<"Pero que?7";
-    //qDebug()<<"Tamaño actual del monticulo: "<<tamanoActual;
-    //qDebug()<<"Verdadero tamano del monticulo: "<<listaHeap.length();
     infiltArriba(tamanoActual);
-    //qDebug()<<"Tamaño despues de infil: "<<listaHeap.length();
 }
 
 
 
-void ArbolHeap::insertar(Persona *person) {
+void ArbolHeap::insertar(Persona *person, int pecado) {
     if(buscarFamilia(person->apellido + "-" + person->pais) == nullptr) {
-        //qDebug()<<"Estoy bien";
-        insertarNuevo(person->apellido + "-" + person->pais, person);      //inserta un nuevo nodo.
+        insertarNuevo(person->apellido + "-" + person->pais, person, pecado);      //inserta un nuevo nodo.
     } else {
-        //qDebug()<<"Estoy bien2";
         NodoHeap *tmp = buscarFamilia(person->apellido + "-" + person->pais);
-        tmp->agregarPersona(person);                    // inserta una persona en un nodo existente.
-        //qDebug()<<buscarUbiacion(person->apellido + "-" + person->pais);//infiltArriba(buscarUbiacion(person->apellido + "-" + person->pais)-1);
+        tmp->agregarPersona(person, pecado);                    // inserta una persona en un nodo existente.
         infiltArriba(buscarUbiacion(person->apellido + "-" + person->pais));
-        //qDebug()<<"Tamaño despues de infil: "<<listaHeap.length();
     }
 }
 
@@ -679,6 +668,150 @@ QString ArbolHeap::recorrer(){
 
     return msg;
 }
+//FIN DE ARBOL HEAP
+
+
+//INICIO DE INFIERNO
+QString Infierno::consultarDemonioPecado() {
+    QString msg = "";
+
+    for(int i=0; i<7; i++) {
+        if(i==0){
+            msg += "Lucifer";
+        }
+        else if (i==1) {
+            msg += "Belcebu";
+        }
+        else if (i==2) {
+            msg += "Satan";
+        }
+        else if (i==3) {
+            msg += "Abadon";
+        }
+        else if (i==4){
+            msg += "Mammon";
+        }
+        else if (i==5) {
+            msg += "Belfegor";
+        }
+        else if (i==6) {
+            msg += "Asmodeo";
+        }
+
+        int cont = 0;
+        for(NodoHeap *tmp : demonios[i]->listaHeap) {
+            cont += tmp->sumapecados;
+        }
+
+        msg += ": "+ QString::number(cont) + "\n";
+    }
+
+    return msg;
+}
+
+QString Infierno::consultarCantidadHumanos(){
+    int contador = 0;
+    for(ArbolHeap *demonio : demonios) {
+        for(NodoHeap *family : demonio->listaHeap) {
+            contador += family->familia->contNodos;
+        }
+    }
+
+    QString msg = "Cantidad de Humanos en el infierno: " + QString::number(contador);
+
+    return msg;
+}
+
+int Infierno::consultarCantidadHumanosInt(){
+    int contador = 0;
+    for(ArbolHeap *demonio : demonios) {
+        for(NodoHeap *family : demonio->listaHeap) {
+            contador += family->familia->contNodos;
+        }
+    }
+
+
+    return contador;
+}
+
+QString Infierno::consultarPromedioDePecados() {
+    int sumaDePecados = 0;
+    for(ArbolHeap *demonio : demonios) {
+        for(NodoHeap *family : demonio->listaHeap) {
+            sumaDePecados += family->sumapecados;
+        }
+    }
+
+    int total = sumaDePecados/consultarCantidadHumanosInt();
+    QString msg = "Promedio de pecados en el infierno: " + QString::number(total);
+
+    return msg;
+}
+
+QString Infierno::consultarMaximoDePecados() {
+    int total = 0;
+    for(ArbolHeap *demonio : demonios) {
+        total += demonio->listaHeap[1]->sumapecados;   //Suma los pecados de los mas pecadores de los demonios
+    }
+
+    QString msg = "Maximo numero de pecados en el infierno: " + QString::number(total);
+
+    return msg;
+}
+
+QString Infierno::consultarMinimoDePecados() {
+    int total = 0;
+    for(ArbolHeap *demonio : demonios) { //ultima posicion del heap
+        total += demonio->listaHeap[demonio->listaHeap.length()]->sumapecados;
+    }   //Suma los pecados de los menos pecadores de los demonios
+
+    QString msg = "Minimo numero de pecados en el infierno: " + QString::number(total);
+
+    return msg;
+}
+
+QString Infierno::consultarMasPecadoresMenosPecadores() {
+    QString msg = "";
+    for(int i=0; i<7; i++) {
+        if(i==0){
+            msg += "-----------------Lucifer-----------------";
+        }
+        else if (i==1) {
+            msg += "-----------------Belcebu-----------------";
+        }
+        else if (i==2) {
+            msg += "-----------------Satan-----------------";
+        }
+        else if (i==3) {
+            msg += "-----------------Abadon-----------------";
+        }
+        else if (i==4){
+            msg += "-----------------Mammon-----------------";
+        }
+        else if (i==5) {
+            msg += "-----------------Belfegor-----------------";
+        }
+        else if (i==6) {
+            msg += "-----------------Asmodeo-----------------";
+        }
+
+        for(NodoHeap *tmp : demonios[i]->listaHeap) {
+            //msg += "----Familia: " + tmp->identificacion+"----\n";
+            NodoPersona *nodoTmp = tmp->familia->primerNodo;
+            while(nodoTmp != nullptr) {
+                msg += nodoTmp->persona->imprimir() +"Pecados:"+
+                        QString::number(nodoTmp->persona->pecados[i] - nodoTmp->persona->buenasAcciones[i]) +"\n";
+                nodoTmp = nodoTmp->siguiente;
+            }
+        }
+
+        msg += "\n\n";
+    }
+
+    return msg;
+}
+
+//FIN DEL INFIERNO
 
 void ArbolAngeles::rellenarPrimerosNiveles() {
     raiz = new NodoTriario();
@@ -689,16 +822,25 @@ void ArbolAngeles::rellenarPrimerosNiveles() {
 
 /**
  * @brief ArbolAngeles::crearAngeles
- * @param raiz
- * @param nivel  debe ser 0
- * @param version debe ser 1
+ * @param raiz  debe ser
+ * @param nivel  siempre debe ser 0
+ * @param version siempre debe ser 1
  * @param infierno
  */
 void ArbolAngeles::crearAngeles(NodoTriario *raiz, int nivel, int version, ArbolHeap *infierno) {
     if(raiz->izq == nullptr && raiz->cen == nullptr && raiz->der == nullptr) {
-        AngelSec *angelIzq = new AngelSec(version, nivel, infierno);
+        AngelSec *angelIzq = new AngelSec(version, nivel++, infierno);
+        //AngelSec *angelIzq = new AngelSec(version, nivel, infierno);
+        //AngelSec *angelIzq = new AngelSec(version, nivel, infierno);
+
         raiz->izq = new NodoTriario(angelIzq);
     } else {
 
     }
+}
+
+
+
+void ABBMundo::crearArbol(int tamano) {
+
 }

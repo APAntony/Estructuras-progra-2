@@ -12,6 +12,8 @@ using namespace std;
 
 struct ListaPersonas;
 struct Persona;
+struct NodoPecado;
+struct ListaPecados;
 
 struct NodoPersona{
     Persona *persona;
@@ -209,14 +211,10 @@ struct NodoHeap {
         familia = new ListaPersonas();
     }
 
-    void agregarPersona(Persona *person) {
-        //qDebug() << "Pero que?";
+    void agregarPersona(Persona *person, int pecado) {
         familia->insertarPersonaOrdenada(person);
-        //qDebug() << "Pero quex2?";
-        for (int pecado : person->pecados) {
-            //qDebug() << "Pero quex3?";
-            sumapecados += pecado;
-        }
+        sumapecados += (person->pecados[pecado]-person->buenasAcciones[pecado]);
+
     }
 };
 
@@ -232,8 +230,8 @@ struct ArbolHeap {
 
     void infiltArriba(int i);
     void infiltAbajo(int i);
-    void insertarNuevo(QString familia_continente, Persona *person);
-    void insertar(Persona *person);
+    void insertarNuevo(QString familia_continente, Persona *person, int pecado);
+    void insertar(Persona *person,int pecado);
     int hijoMin(int i);
     NodoHeap* buscarFamilia(QString apellido_pais);
     int buscarUbiacion(QString apellido_pais);
@@ -243,7 +241,22 @@ struct ArbolHeap {
 };
 
 struct Infierno {
-    ArbolHeap demonios[7];
+    ArbolHeap* demonios[7];
+
+    Infierno() {
+        for(int i=0; i<7; i++) {
+            demonios[i] = new ArbolHeap();
+        }
+    }
+
+    void condenar();
+    QString consultarDemonioPecado();
+    QString consultarCantidadHumanos();
+    int consultarCantidadHumanosInt();
+    QString consultarPromedioDePecados();
+    QString consultarMaximoDePecados();
+    QString consultarMinimoDePecados();
+    QString consultarMasPecadoresMenosPecadores();
 };
 
 struct AngelSec {
@@ -258,6 +271,9 @@ struct AngelSec {
     AngelSec(int version, int generacion, ArbolHeap *personas) {
         int ptr = rand()%10;
         Persona *person = personas->listaHeap.takeAt(personas->listaHeap.length())->familia->ultimoNodo->persona;
+        //
+        //..........................Eliminar esa persona que se saco del infierno..........................
+        //
         this->nombre = nombres[ptr];
         this->version = version;
         this->generacion = generacion;
@@ -297,6 +313,34 @@ struct ArbolAngeles {
 
     void rellenarPrimerosNiveles();
     void crearAngeles(NodoTriario *raiz, int nivel, int version, ArbolHeap *infierno);
+};
+
+struct NodoArbolMundo {
+    Persona *persona;
+    NodoArbolMundo *izquierda;
+    NodoArbolMundo *derecha;
+
+    NodoArbolMundo() {
+        persona = nullptr;
+        izquierda = derecha = nullptr;
+    }
+
+    NodoArbolMundo(Persona *person) {
+        persona = person;
+        izquierda = derecha = nullptr;
+    }
+};
+
+struct ABBMundo {
+    NodoArbolMundo *raiz;
+    QVector<Persona*> arbol;
+
+    ABBMundo() {
+        raiz = nullptr;
+        arbol.insert(9,raiz->persona);
+    }
+
+    void crearArbol(int tamano);
 };
 
 #endif // ESTRUCTURAS_H
