@@ -7,6 +7,7 @@
 #include <string>
 #include <cstdlib>
 #include <QDebug>
+#include "math.h"
 
 using namespace std;
 
@@ -82,6 +83,30 @@ struct Persona{
 };
 
 
+struct NodoArbol{
+    Persona * persona;
+    NodoPersona * nodo;
+    NodoArbol * izq,*der;
+    NodoArbol(Persona * pPersona){
+        persona=pPersona;
+        nodo=nullptr;
+        izq=der=nullptr;
+    }
+    NodoArbol(){}
+};
+
+struct ArbolBinario{
+    NodoArbol * raiz;
+    ArbolBinario(){
+        raiz=nullptr;
+    }
+    void insertar(NodoPersona*);
+    NodoArbol * insertar(NodoPersona*,NodoArbol*);
+    void inOrden(NodoArbol*);
+    void buscarProfundidad(int);
+    void buscarProfundidad(int,NodoArbol*,int);
+};
+
 struct Mundo{
     QString paises[100];
     QString nombres[1000];
@@ -90,6 +115,7 @@ struct Mundo{
     QString creencias[10];
     ListaPersonas *lista;
     QVector<int> ids;
+    ArbolBinario * arbolMundo;
 
     Mundo() {
         //qDebug()<<"estoy sirviendo1";
@@ -99,10 +125,12 @@ struct Mundo{
         lectura(profesiones, "profesiones.txt");
         lectura(creencias, "creencias.txt");
         lista = new ListaPersonas();
+        arbolMundo=new ArbolBinario();
     }
 
     void lectura(QString array[], string url);
     void crearPersonas(int cantidad);
+    void generarArbol();
 };
 
 
@@ -329,18 +357,6 @@ struct NodoArbolMundo {
         persona = person;
         izquierda = derecha = nullptr;
     }
-};
-
-struct ABBMundo {
-    NodoArbolMundo *raiz;
-    QVector<Persona*> arbol;
-
-    ABBMundo() {
-        raiz = nullptr;
-        arbol.insert(9,raiz->persona);
-    }
-
-    void crearArbol(int tamano);
 };
 
 #endif // ESTRUCTURAS_H

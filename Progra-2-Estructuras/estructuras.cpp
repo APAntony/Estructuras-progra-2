@@ -60,6 +60,79 @@ QString ListaPersonas::imprimir(){
     return msg;
 }
 
+void ArbolBinario::insertar(NodoPersona * nodo){
+    raiz=insertar(nodo,raiz);
+}
+
+NodoArbol * ArbolBinario::insertar(NodoPersona * nodo,NodoArbol * arbol){
+    if(arbol==nullptr){
+        NodoArbol * nuevo=new NodoArbol(nodo->persona);
+        nuevo->nodo=nodo;
+        return nuevo;
+    }else if(arbol->persona->id<nodo->persona->id){
+        arbol->nodo=nullptr;
+        arbol->der=insertar(nodo,arbol->der);
+    }else{
+        arbol->nodo=nullptr;
+        arbol->izq=insertar(nodo,arbol->izq);
+    }
+    return arbol;
+}
+
+void ArbolBinario::inOrden(NodoArbol * arbol){
+    if(arbol!=nullptr){
+        inOrden(arbol->izq);
+        qDebug()<<arbol->persona->id<<endl;
+        inOrden(arbol->der);
+    }
+}
+
+void ArbolBinario::buscarProfundidad(int dato){
+    buscarProfundidad(dato,raiz,0);
+}
+
+void ArbolBinario::buscarProfundidad(int dato,NodoArbol * arbol,int profundidad){
+    if(arbol!=nullptr){
+        if(arbol->persona->id==dato){
+            qDebug()<<profundidad<<endl;
+        }else if(arbol->persona->id<dato){
+            buscarProfundidad(dato,arbol->der,profundidad+1);
+        }else{
+            buscarProfundidad(dato,arbol->izq,profundidad+1);
+        }
+    }
+}
+
+void nuevoArregloDer(NodoPersona * arreglo[],NodoPersona* nuevo[],int size){
+    int i=1;
+    while(i<=size){
+        nuevo[i-1]=arreglo[size+i];
+        i++;
+    }
+}
+
+void nuevoArregloIzq(NodoPersona * arreglo[],NodoPersona * nuevo[],int size){
+    int i=0;
+    while(i<size){
+        nuevo[i]=arreglo[i];
+        i++;
+    }
+}
+
+void balancearArbol(NodoPersona * arreglo[],ArbolBinario * arbol,int size){
+    if(size!=0){
+        arbol->insertar(arreglo[size]);
+        NodoPersona * nuevoDer[size];
+        NodoPersona * nuevoIzq[size];
+        nuevoArregloDer(arreglo,nuevoDer,size);
+        nuevoArregloIzq(arreglo,nuevoIzq,size);
+        balancearArbol(nuevoDer,arbol,size/2);
+        balancearArbol(nuevoIzq,arbol,size/2);
+    }else{
+        arbol->insertar(arreglo[0]);
+    }
+}
+
 void Mundo::lectura(QString array[], string url) {
     ifstream archivo;
     string texto;
@@ -133,8 +206,68 @@ void Mundo::crearPersonas(int cantidad){
         lista->insertarPersonaOrdenada(person);
         i++;
     }
+    generarArbol();
 }
 
+int completarCantidad(int numero){
+    int i=0;
+    while(numero>0){
+        numero-=pow(2,i);
+        i++;
+    }
+    return abs(numero);
+}
+
+bool validarNodo(NodoPersona * arreglo[],NodoPersona * nodo,int total){
+    int i=0;
+    while(i<total){
+        if(arreglo[i]==nodo){
+            return false;
+        }
+        i++;
+    }
+    return true;
+}
+
+void ordenarArreglo(NodoPersona * arreglo[],NodoPersona *nodo,int total){
+    if(arreglo[total-1]->persona->id<nodo->persona->id){
+        arreglo[total]=nodo;
+    }else{
+        int i=1;
+        while(i<total){
+            if(arreglo[i]->persona->id>nodo->persona->id){
+                NodoPersona * tmp=nodo;
+                nodo=arreglo[i];
+                arreglo[i]=tmp;
+            }
+            i++;
+        }
+        arreglo[total]=nodo;
+    }
+}
+
+void Mundo::generarArbol(){
+    int totalNodos=lista->contNodos;
+    totalNodos/=100;
+    totalNodos+=completarCantidad(totalNodos);
+    NodoPersona * arreglo[totalNodos];
+    arreglo[0]=lista->primerNodo;
+    int random;
+    int cantidad=1;
+    while(cantidad<totalNodos){
+        random=rand()%lista->contNodos;
+        NodoPersona * tmp=lista->primerNodo;
+        while(random!=0){
+            tmp=tmp->siguiente;
+            random-=1;
+        }
+        if(validarNodo(arreglo,tmp,cantidad)){
+            ordenarArreglo(arreglo,tmp,cantidad);
+            cantidad++;
+        }
+    }
+    balancearArbol(arreglo,arbolMundo,totalNodos/2);
+}
 
 //ARBOL AVL
 
@@ -837,10 +970,4 @@ void ArbolAngeles::crearAngeles(NodoTriario *raiz, int nivel, int version, Arbol
     } else {
 
     }
-}
-
-
-
-void ABBMundo::crearArbol(int tamano) {
-
 }
