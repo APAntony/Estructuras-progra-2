@@ -1,0 +1,10 @@
+debug/continente.o
+debug/estructuras.o
+debug/main.o
+debug/mainwindow.o
+debug/principal.o
+debug/smtp.o
+debug/moc_continente.o
+debug/moc_mainwindow.o
+debug/moc_principal.o
+debug/moc_smtp.o

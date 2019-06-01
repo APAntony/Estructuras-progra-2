@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fstream>
+#include <QHash>
 
 #include "smtp.h"
 
@@ -120,7 +121,7 @@ int main(int argc, char *argv[])
     Mundo *m = new Mundo();
     m->crearPersonas(10000);
 
-    infi->condenar(m->lista);
+    /*infi->condenar(m->lista);
 
     qDebug()<<"------------------------Orgullo------------------------";
     for(NodoHeap *nod : infi->demonios[0]->listaHeap) {
@@ -155,10 +156,19 @@ int main(int argc, char *argv[])
     qDebug()<<"------------------------Lujuria------------------------";
     for(NodoHeap *nod : infi->demonios[6]->listaHeap) {
         qDebug()<<nod->identificacion<<":"<<nod->sumapecados;
-    }
+    }*/
 
+    QHash<int, QString> hash;
+    hash.insert(1, "Soy uno");
+    hash.insert(2, "Soy dos");
+    hash.insert(3, "Soy tres");
+    hash.insert(4, "Soy cuatro");
+
+    qDebug()<<"Que curioso el hash... "<<hash.value(3);
 
     //m->crearPersonas(5000);
+    //m->hacerHijos();
+    //m->hacerHijos();
     //m->crearPersonas();
     //m->crearPersonas();
 

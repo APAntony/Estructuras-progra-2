@@ -40,11 +40,13 @@ struct ListaPersonas{
     void insertarPersonaOrdenada(Persona*);
     void insertarPersonaOrdenadaPorPecado(Persona *persona, int pecado);
     Persona buscarPersona(int);
+    Persona* at(int);
     QString imprimir();
     NodoPersona* eliminarPrimero();
     NodoPersona* takeAt(int posicion);
     NodoPersona* EliminarPersona(Persona *person);
     ListaPersonas* ordenarPorPecado(ListaPersonas *lista,int p);
+    bool existe(Persona *persona);
 };
 
 struct Persona{
@@ -133,6 +135,8 @@ struct Mundo{
     void lectura(QString array[], string url);
     void crearPersonas(int cantidad);
     void generarArbol();
+    void hacerHijos();
+    void pecar();
 };
 
 

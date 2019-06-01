@@ -20,6 +20,19 @@ QString Persona::imprimir(){
     msg.append("Profesion: " + profesion + "\n");
     msg.append("Fecha de nacimiento: " + fecha + "\n");
     msg.append("Hora de nacimiento: " + hora + "\n");
+    msg.append("Hijos: \n");
+    NodoPersona *tmp = hijos->primerNodo;
+    while(tmp != nullptr){
+        msg.append("    Nombre: " + tmp->persona->nombre + "\n");
+        msg.append("    Apellido: " + tmp->persona->apellido + "\n");
+        msg.append("    Continente: " + tmp->persona->continente + "\n");
+        msg.append("    Pais: " + tmp->persona->pais + "\n");
+        msg.append("    Creencia: " + tmp->persona->creencia + "\n");
+        msg.append("    Profesion: " + tmp->persona->profesion + "\n");
+
+        msg += "\n";
+        tmp = tmp->siguiente;
+    }
 
     msg += "\n";
 
@@ -52,29 +65,24 @@ void ListaPersonas::insertarPersonaOrdenada(Persona *persona){
 
 void ListaPersonas::insertarPersonaOrdenadaPorPecado(Persona *persona, int pecado){
     if(primerNodo == nullptr) {
-        qDebug()<<"Me mame";
         primerNodo = ultimoNodo = new NodoPersona(persona);
     } else if((persona->pecados[pecado] - persona->buenasAcciones[pecado]) >=
               (primerNodo->persona->pecados[pecado] - primerNodo->persona->buenasAcciones[pecado])) {
-        qDebug()<<"Me mame2";
         NodoPersona *nuevo = new NodoPersona(persona);
         nuevo->siguiente = primerNodo;
         primerNodo = nuevo;
     } else if((persona->pecados[pecado] - persona->buenasAcciones[pecado]) <
               (ultimoNodo->persona->pecados[pecado] - ultimoNodo->persona->buenasAcciones[pecado])){
-        qDebug()<<"Me mame3";
         NodoPersona *nuevo = new NodoPersona(persona);
         ultimoNodo->siguiente = nuevo;
         ultimoNodo = nuevo;
     } else {
-        qDebug()<<"Me mame4";
         NodoPersona *tmp = primerNodo;
         NodoPersona *nuevo = new NodoPersona(persona);
         while ((tmp->siguiente->persona->pecados[pecado] - tmp->siguiente->persona->buenasAcciones[pecado]) >
                (nuevo->persona->pecados[pecado] - nuevo->persona->buenasAcciones[pecado])) {
             tmp = tmp->siguiente;
         }
-        qDebug()<<"Me mame5";
 
         nuevo->siguiente = tmp->siguiente;
         tmp->siguiente = nuevo;
@@ -102,6 +110,7 @@ NodoPersona* ListaPersonas::takeAt(int posicion) {
         NodoPersona *tmp = primerNodo;
         primerNodo = primerNodo->siguiente;
         tmp->siguiente = nullptr;
+        contNodos--;
         return tmp;
     } else {
         int ptr = 0;
@@ -117,6 +126,7 @@ NodoPersona* ListaPersonas::takeAt(int posicion) {
         NodoPersona *tmp2 = tmp->siguiente;
         tmp->siguiente = tmp2->siguiente;
         tmp2->siguiente = nullptr;
+        contNodos--;
         return tmp2;
     }
 }
@@ -128,6 +138,7 @@ NodoPersona* ListaPersonas::EliminarPersona(Persona* person) {
         NodoPersona *tmp = primerNodo;
         primerNodo = primerNodo->siguiente;
         tmp->siguiente = nullptr;
+        contNodos--;
         return tmp;
     } else {
         NodoPersona *tmp = primerNodo;
@@ -141,6 +152,7 @@ NodoPersona* ListaPersonas::EliminarPersona(Persona* person) {
         NodoPersona *tmp2 = tmp->siguiente;
         tmp->siguiente = tmp2->siguiente;
         tmp2->siguiente = nullptr;
+        contNodos--;
         return tmp2;
     }
 }
@@ -166,7 +178,45 @@ NodoPersona* ListaPersonas::eliminarPrimero(){
         NodoPersona *tmp = primerNodo;
         primerNodo = primerNodo->siguiente;
         tmp->siguiente = nullptr;
+        contNodos--;
         return tmp;
+    }
+}
+
+Persona* ListaPersonas::at(int pos){
+    if(pos >= contNodos || pos < 0){
+        qDebug()<<"La lista no tiene una posicion: "<<pos;
+        return nullptr;
+    } else if(pos == 0){
+        return primerNodo->persona;
+    } else {
+        int ptr = 0;
+        NodoPersona *tmp = primerNodo;
+        while(tmp != nullptr) {
+            if(ptr == pos){
+                break;
+            }
+            tmp= tmp->siguiente;
+            ptr++;
+        }
+
+        return tmp->persona;
+    }
+}
+
+bool ListaPersonas::existe(Persona *persona) {
+    if(primerNodo == nullptr){
+        return false;
+    } else {
+        NodoPersona *tmp = primerNodo;
+        while(tmp != nullptr){
+            if(tmp->persona->id == persona->id){
+                return true;
+            }
+            tmp = tmp->siguiente;
+        }
+
+        return false;
     }
 }
 
@@ -275,15 +325,9 @@ void Mundo::crearPersonas(int cantidad){
     int ptrapellidos = 0;
     int ptrpaises = 0;
     int id = 0;
-    //QVector<int> ids;
-
-    //int ids[9999999];
-
-    //qDebug()<<"estoy sirviendo3";
 
     int i = 0;
     while (i < cantidad) {
-        //qDebug()<<"estoy sirviendo while"<<i;
         ptrnombre = rand()%1000;
         ptrpaises = rand()%100;
         ptrapellidos = rand()%1000;
@@ -380,6 +424,31 @@ void Mundo::generarArbol(){
     }
     arbolMundo->raiz = nullptr;
     balancearArbol(arreglo,arbolMundo,totalNodos/2);
+}
+
+void Mundo::hacerHijos(){
+    int max = lista->contNodos/4;
+    qDebug()<<"MAXIMO: "<< max;
+    while(max > 0){
+        int maxHijos = rand()%8;
+        int personPadre = rand()%(lista->contNodos-1);
+        Persona *padre = lista->at(personPadre);
+
+        while(maxHijos > 0){
+            int personHijo = rand()%(lista->contNodos-1);
+            Persona *hijo = lista->at(personHijo);
+
+            if(padre->hijos->existe(hijo) == false){
+                padre->hijos->insertarPersonaOrdenada(lista->at(personHijo));
+                hijo->padre = padre;
+            }
+            maxHijos--;
+        }
+
+        max--;
+    }
+
+    qDebug()<<"TERMINE";
 }
 
 //ARBOL AVL
