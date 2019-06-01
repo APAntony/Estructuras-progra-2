@@ -13,8 +13,6 @@ using namespace std;
 
 struct ListaPersonas;
 struct Persona;
-struct NodoPecado;
-struct ListaPecados;
 
 struct NodoPersona{
     Persona *persona;
@@ -40,9 +38,13 @@ struct ListaPersonas{
     }
 
     void insertarPersonaOrdenada(Persona*);
+    void insertarPersonaOrdenadaPorPecado(Persona *persona, int pecado);
     Persona buscarPersona(int);
     QString imprimir();
-    void eliminarPrimero();
+    NodoPersona* eliminarPrimero();
+    NodoPersona* takeAt(int posicion);
+    NodoPersona* EliminarPersona(Persona *person);
+    ListaPersonas* ordenarPorPecado(ListaPersonas *lista,int p);
 };
 
 struct Persona{
@@ -277,7 +279,7 @@ struct Infierno {
         }
     }
 
-    void condenar();
+    void condenar(ListaPersonas *personasMundo);
     QString consultarDemonioPecado();
     QString consultarCantidadHumanos();
     int consultarCantidadHumanosInt();
@@ -298,10 +300,14 @@ struct AngelSec {
 
     AngelSec(int version, int generacion, ArbolHeap *personas) {
         int ptr = rand()%10;
-        Persona *person = personas->listaHeap.takeAt(personas->listaHeap.length())->familia->ultimoNodo->persona;
-        //
-        //..........................Eliminar esa persona que se saco del infierno..........................
-        //
+        Persona *person;// personas->listaHeap.at(personas->listaHeap.length()-1)->familia->ultimoNodo->persona;
+                            //
+                            //..........................Eliminar esa persona que se saco del infierno..........................
+                            //
+        for(NodoHeap *nodo : personas->listaHeap) {
+
+        }
+
         this->nombre = nombres[ptr];
         this->version = version;
         this->generacion = generacion;
@@ -337,10 +343,12 @@ struct ArbolAngeles {
 
     ArbolAngeles () {
         raiz = nullptr;
+        rellenarPrimerosNiveles();
     }
 
     void rellenarPrimerosNiveles();
     void crearAngeles(NodoTriario *raiz, int nivel, int version, ArbolHeap *infierno);
+    int contarNodos(NodoTriario *raiz);
 };
 
 struct NodoArbolMundo {

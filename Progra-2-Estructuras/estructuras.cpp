@@ -7,6 +7,7 @@
 
 using namespace std;
 
+//INICIO DE LISTA SIMPLE
 QString Persona::imprimir(){
     QString msg = "";
     msg.append("Identificacion: " + QString::number(id));
@@ -49,6 +50,38 @@ void ListaPersonas::insertarPersonaOrdenada(Persona *persona){
     contNodos++;
 }
 
+void ListaPersonas::insertarPersonaOrdenadaPorPecado(Persona *persona, int pecado){
+    if(primerNodo == nullptr) {
+        qDebug()<<"Me mame";
+        primerNodo = ultimoNodo = new NodoPersona(persona);
+    } else if((persona->pecados[pecado] - persona->buenasAcciones[pecado]) >=
+              (primerNodo->persona->pecados[pecado] - primerNodo->persona->buenasAcciones[pecado])) {
+        qDebug()<<"Me mame2";
+        NodoPersona *nuevo = new NodoPersona(persona);
+        nuevo->siguiente = primerNodo;
+        primerNodo = nuevo;
+    } else if((persona->pecados[pecado] - persona->buenasAcciones[pecado]) <
+              (ultimoNodo->persona->pecados[pecado] - ultimoNodo->persona->buenasAcciones[pecado])){
+        qDebug()<<"Me mame3";
+        NodoPersona *nuevo = new NodoPersona(persona);
+        ultimoNodo->siguiente = nuevo;
+        ultimoNodo = nuevo;
+    } else {
+        qDebug()<<"Me mame4";
+        NodoPersona *tmp = primerNodo;
+        NodoPersona *nuevo = new NodoPersona(persona);
+        while ((tmp->siguiente->persona->pecados[pecado] - tmp->siguiente->persona->buenasAcciones[pecado]) >
+               (nuevo->persona->pecados[pecado] - nuevo->persona->buenasAcciones[pecado])) {
+            tmp = tmp->siguiente;
+        }
+        qDebug()<<"Me mame5";
+
+        nuevo->siguiente = tmp->siguiente;
+        tmp->siguiente = nuevo;
+    }
+    contNodos++;
+}
+
 QString ListaPersonas::imprimir(){
     QString msg = "";
     NodoPersona *tmp = primerNodo;
@@ -59,6 +92,85 @@ QString ListaPersonas::imprimir(){
 
     return msg;
 }
+
+NodoPersona* ListaPersonas::takeAt(int posicion) {
+    if(posicion >= contNodos || posicion < 0){
+        qDebug()<<"La lista no tiene una posicion: "<<posicion;
+        return nullptr;
+    }
+    else if (posicion == 0){
+        NodoPersona *tmp = primerNodo;
+        primerNodo = primerNodo->siguiente;
+        tmp->siguiente = nullptr;
+        return tmp;
+    } else {
+        int ptr = 0;
+        NodoPersona *tmp = primerNodo;
+        while(tmp->siguiente != nullptr) {
+            if(ptr+1 == posicion){
+                break;
+            }
+            tmp= tmp->siguiente;
+            ptr++;
+        }
+
+        NodoPersona *tmp2 = tmp->siguiente;
+        tmp->siguiente = tmp2->siguiente;
+        tmp2->siguiente = nullptr;
+        return tmp2;
+    }
+}
+
+NodoPersona* ListaPersonas::EliminarPersona(Persona* person) {
+    if(primerNodo == nullptr) {
+        return nullptr;
+    } else if (person == primerNodo->persona) {
+        NodoPersona *tmp = primerNodo;
+        primerNodo = primerNodo->siguiente;
+        tmp->siguiente = nullptr;
+        return tmp;
+    } else {
+        NodoPersona *tmp = primerNodo;
+        while(tmp->siguiente != nullptr) {
+            if(tmp->siguiente->persona == person){
+                break;
+            }
+            tmp= tmp->siguiente;
+        }
+
+        NodoPersona *tmp2 = tmp->siguiente;
+        tmp->siguiente = tmp2->siguiente;
+        tmp2->siguiente = nullptr;
+        return tmp2;
+    }
+}
+
+ListaPersonas* ListaPersonas::ordenarPorPecado(ListaPersonas *lista,int p){
+    if(p < 7){
+        ListaPersonas *nueva = new ListaPersonas();
+        NodoPersona *tmp = lista->primerNodo;
+        while(tmp != nullptr){
+            nueva->insertarPersonaOrdenadaPorPecado(tmp->persona, p);
+            tmp = tmp->siguiente;
+        }
+        return nueva;
+    } else {
+        return nullptr;
+    }
+}
+
+NodoPersona* ListaPersonas::eliminarPrimero(){
+    if(primerNodo == nullptr) {
+        return nullptr;
+    } else {
+        NodoPersona *tmp = primerNodo;
+        primerNodo = primerNodo->siguiente;
+        tmp->siguiente = nullptr;
+        return tmp;
+    }
+}
+
+//FIN DE LA LISTA DE PERSONAS
 
 void ArbolBinario::insertar(NodoPersona * nodo){
     raiz=insertar(nodo,raiz);
@@ -266,6 +378,7 @@ void Mundo::generarArbol(){
             cantidad++;
         }
     }
+    arbolMundo->raiz = nullptr;
     balancearArbol(arreglo,arbolMundo,totalNodos/2);
 }
 
@@ -842,6 +955,47 @@ QString Infierno::consultarDemonioPecado() {
     return msg;
 }
 
+void Infierno::condenar(ListaPersonas *personasMundo){
+    ListaPersonas *orgullo = personasMundo->ordenarPorPecado(personasMundo, 0);
+    ListaPersonas *envidia = personasMundo->ordenarPorPecado(personasMundo, 1);
+    ListaPersonas *ira = personasMundo->ordenarPorPecado(personasMundo, 2);
+    ListaPersonas *pereza = personasMundo->ordenarPorPecado(personasMundo, 3);
+    ListaPersonas *codicia = personasMundo->ordenarPorPecado(personasMundo, 4);
+    ListaPersonas *gula = personasMundo->ordenarPorPecado(personasMundo, 5);
+    ListaPersonas *lujuria = personasMundo->ordenarPorPecado(personasMundo, 6);
+
+    int cincoPorciento = personasMundo->contNodos * 0.05;
+
+    for(int i=cincoPorciento; i > 0; i--){
+        demonios[0]->insertar(orgullo->eliminarPrimero()->persona, 0);
+
+    }
+
+    for(int i=cincoPorciento; i > 0; i--){
+        demonios[1]->insertar(envidia->eliminarPrimero()->persona, 1);
+    }
+
+    for(int i=cincoPorciento; i > 0; i--){
+        demonios[2]->insertar(ira->eliminarPrimero()->persona, 2);
+    }
+
+    for(int i=cincoPorciento; i > 0; i--){
+        demonios[3]->insertar(pereza->eliminarPrimero()->persona, 3);
+    }
+
+    for(int i=cincoPorciento; i > 0; i--){
+        demonios[4]->insertar(codicia->eliminarPrimero()->persona, 4);
+    }
+
+    for(int i=cincoPorciento; i > 0; i--){
+        demonios[5]->insertar(gula->eliminarPrimero()->persona, 5);
+    }
+
+    for(int i=cincoPorciento; i > 0; i--){
+        demonios[6]->insertar(lujuria->eliminarPrimero()->persona, 6);
+    }
+}
+
 QString Infierno::consultarCantidadHumanos(){
     int contador = 0;
     for(ArbolHeap *demonio : demonios) {
@@ -946,6 +1100,7 @@ QString Infierno::consultarMasPecadoresMenosPecadores() {
 
 //FIN DEL INFIERNO
 
+//INICIO ARBOL ANGELES
 void ArbolAngeles::rellenarPrimerosNiveles() {
     raiz = new NodoTriario();
     raiz->izq = new NodoTriario();
@@ -954,6 +1109,8 @@ void ArbolAngeles::rellenarPrimerosNiveles() {
 }
 
 /**
+ * Crea una generacion de angeles
+ *
  * @brief ArbolAngeles::crearAngeles
  * @param raiz  debe ser
  * @param nivel  siempre debe ser 0
@@ -961,13 +1118,33 @@ void ArbolAngeles::rellenarPrimerosNiveles() {
  * @param infierno
  */
 void ArbolAngeles::crearAngeles(NodoTriario *raiz, int nivel, int version, ArbolHeap *infierno) {
-    if(raiz->izq == nullptr && raiz->cen == nullptr && raiz->der == nullptr) {
-        AngelSec *angelIzq = new AngelSec(version, nivel++, infierno);
-        //AngelSec *angelIzq = new AngelSec(version, nivel, infierno);
-        //AngelSec *angelIzq = new AngelSec(version, nivel, infierno);
+    if(raiz != nullptr) {
+        if(raiz->izq == nullptr && raiz->cen == nullptr && raiz->der == nullptr) {
+            AngelSec *angelIzq = new AngelSec(version++, nivel, infierno);
+            AngelSec *angelDer = new AngelSec(version++, nivel, infierno);
+            AngelSec *angelCen = new AngelSec(version++, nivel, infierno);
+            raiz->izq = new NodoTriario(angelIzq);
+            raiz->cen = new NodoTriario(angelCen);
+            raiz->der = new NodoTriario(angelDer);
 
-        raiz->izq = new NodoTriario(angelIzq);
-    } else {
-
+        } else {
+            crearAngeles(raiz->izq, nivel+1, version, infierno);
+            crearAngeles(raiz->cen, nivel+1, version, infierno);
+            crearAngeles(raiz->der, nivel+1, version, infierno);
+        }
     }
 }
+
+int ArbolAngeles::contarNodos(NodoTriario *nodo) {
+    int num_elems = 0;
+     if(nodo != nullptr) {
+        num_elems += contarNodos(nodo->izq);
+        num_elems++; // contabilizar el nodo visitado
+        num_elems += contarNodos(nodo->cen);
+        num_elems += contarNodos(nodo->der);
+    }
+
+    return num_elems;
+
+}
+//FIN DE ARBOL DE ANGELES

@@ -80,10 +80,84 @@ int main(int argc, char *argv[])
     qDebug()<<infi->consultarMasPecadoresMenosPecadores();
 
 
+    qDebug()<<" ";
+    qDebug()<<" ";
+    qDebug()<<"Pruebas de ArbolAngeles";
+
+    ArbolAngeles *angeles = new ArbolAngeles();
+    angeles->crearAngeles(angeles->raiz, 0, 0, infi->demonios[0]);
+    bool lol = angeles->raiz == nullptr;
+    qDebug()<<lol;
+    qDebug()<<angeles->contarNodos(angeles->raiz);
+
+
+    qDebug()<<" ";
+    qDebug()<<" ";
+
+    qDebug()<<"Prueba de eliminar de listaSimple";
+    ListaPersonas *lista = new ListaPersonas();
+    //lista->insertarPersonaOrdenadaPorPecado(p1, 0);
+    //lista->insertarPersonaOrdenadaPorPecado(p2, 0);
+    //lista->insertarPersonaOrdenadaPorPecado(p3, 0);
+    //lista->insertarPersonaOrdenadaPorPecado(p4, 0);
+    //lista->insertarPersonaOrdenadaPorPecado(p5, 0);
+
+    //qDebug()<<lista->imprimir();
+
+    qDebug()<<" ";
+    qDebug()<<" ";
+
+    //NodoPersona *tmp = lista->primerNodo;
+    //while(tmp != nullptr){
+    //    qDebug()<<tmp->persona->pecados[0];
+    //    tmp = tmp->siguiente;
+    //}
+    //lista->EliminarPersona(p1);
+
+    //qDebug()<<lista->imprimir();
     //qDebug()<<arbol->buscarUbiacion("Artavia-Costa Rica");
 
-    //Mundo *m = new Mundo();
-    //m->crearPersonas(10000);
+    Mundo *m = new Mundo();
+    m->crearPersonas(10000);
+
+    infi->condenar(m->lista);
+
+    qDebug()<<"------------------------Orgullo------------------------";
+    for(NodoHeap *nod : infi->demonios[0]->listaHeap) {
+        qDebug()<<nod->identificacion<<":"<<nod->sumapecados;
+    }
+
+    qDebug()<<"------------------------Envidia------------------------";
+    for(NodoHeap *nod : infi->demonios[1]->listaHeap) {
+        qDebug()<<nod->identificacion<<":"<<nod->sumapecados;
+    }
+
+    qDebug()<<"------------------------Ira------------------------";
+    for(NodoHeap *nod : infi->demonios[2]->listaHeap) {
+        qDebug()<<nod->identificacion<<":"<<nod->sumapecados;
+    }
+
+    qDebug()<<"------------------------Pereza------------------------";
+    for(NodoHeap *nod : infi->demonios[3]->listaHeap) {
+        qDebug()<<nod->identificacion<<":"<<nod->sumapecados;
+    }
+
+    qDebug()<<"------------------------Codicia------------------------";
+    for(NodoHeap *nod : infi->demonios[4]->listaHeap) {
+        qDebug()<<nod->identificacion<<":"<<nod->sumapecados;
+    }
+
+    qDebug()<<"------------------------Gula------------------------";
+    for(NodoHeap *nod : infi->demonios[5]->listaHeap) {
+        qDebug()<<nod->identificacion<<":"<<nod->sumapecados;
+    }
+
+    qDebug()<<"------------------------Lujuria------------------------";
+    for(NodoHeap *nod : infi->demonios[6]->listaHeap) {
+        qDebug()<<nod->identificacion<<":"<<nod->sumapecados;
+    }
+
+
     //m->crearPersonas(5000);
     //m->crearPersonas();
     //m->crearPersonas();
