@@ -453,9 +453,9 @@
    </palette>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Mundo</string>
   </property>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="contiPecadores">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -476,7 +476,7 @@
     <string>Continentes mas pecadores</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="contiBuenos">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -497,7 +497,7 @@
     <string>Continentes buenas acciones</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_3">
+  <widget class="QPushButton" name="paisesMasPeca">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -518,7 +518,7 @@
     <string>Paises mas pecadores</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_4">
+  <widget class="QPushButton" name="paisesMenosPeca">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -539,7 +539,7 @@
     <string>Paises menos pecadores</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_5">
+  <widget class="QPushButton" name="paisesMasBuenos">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -560,7 +560,7 @@
     <string>Paises mas buenas acciones</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_6">
+  <widget class="QPushButton" name="paisesMenosBuenos">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -598,6 +598,67 @@
    </property>
    <property name="scaledContents">
     <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>10</y>
+     <width>221</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background:white</string>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Interferir en las personas&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="scaledContents">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pecarBt">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>50</y>
+     <width>191</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background:orange</string>
+   </property>
+   <property name="text">
+    <string>Pecar</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="accionesBt">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>100</y>
+     <width>191</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background:orange</string>
+   </property>
+   <property name="text">
+    <string>Realizar buenas acciones</string>
    </property>
   </widget>
  </widget>
