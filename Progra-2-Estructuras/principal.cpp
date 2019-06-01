@@ -1,6 +1,8 @@
 #include "principal.h"
 #include "ui_principal.h"
 
+#include "smtp.h"
+
 Principal::Principal(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Principal)
@@ -9,6 +11,7 @@ Principal::Principal(QWidget *parent) :
     mundo=new Mundo();
     infierno=new Infierno;
     mundo->crearPersonas(10000);
+    ui->cantidadPersonas->setMaximum(30000);
 }
 
 Principal::~Principal()
@@ -85,9 +88,14 @@ void Principal::on_contiBuenos_clicked()
 }
 
 void Principal::buscarDeAqui(NodoPersona * inicio,NodoPersona * buscado,int arreglo[],bool tipo){
-    while(inicio!=buscado){
+    qDebug()<<"Mdre mia";
+    while(inicio->persona->id!=buscado->persona->id){
+        qDebug()<<"Mdre mia4";
+        qDebug()<<"inicio"<<inicio->persona->id;
+        qDebug()<<"buscado"<<buscado->persona->id;
         inicio=inicio->siguiente;
     }
+    qDebug()<<"Mdre mia2";
     if(tipo){
         inicio->persona->buenasAcciones[0]+=arreglo[0];
         inicio->persona->buenasAcciones[1]+=arreglo[1];
@@ -97,6 +105,7 @@ void Principal::buscarDeAqui(NodoPersona * inicio,NodoPersona * buscado,int arre
         inicio->persona->buenasAcciones[5]+=arreglo[5];
         inicio->persona->buenasAcciones[6]+=arreglo[6];
     }else{
+        qDebug()<<"Mdre mia3";
         inicio->persona->pecados[0]+=arreglo[0];
         inicio->persona->pecados[1]+=arreglo[1];
         inicio->persona->pecados[2]+=arreglo[2];
@@ -108,8 +117,11 @@ void Principal::buscarDeAqui(NodoPersona * inicio,NodoPersona * buscado,int arre
 }
 
 void Principal::buscarEnArbol(int arreglo[],NodoPersona * nodo,NodoArbol * arbol,bool tipo){
-    if(arbol->persona==nodo->persona){
+    bool lol = arbol->persona == nodo->persona;
+    qDebug()<<"Morimos "<<lol;
+    if(arbol->persona->id == nodo->persona->id){
         if(tipo){
+            qDebug()<<"Morimos2";
             arbol->persona->buenasAcciones[0]+=arreglo[0];
             arbol->persona->buenasAcciones[1]+=arreglo[1];
             arbol->persona->buenasAcciones[2]+=arreglo[2];
@@ -118,6 +130,7 @@ void Principal::buscarEnArbol(int arreglo[],NodoPersona * nodo,NodoArbol * arbol
             arbol->persona->buenasAcciones[5]+=arreglo[5];
             arbol->persona->buenasAcciones[6]+=arreglo[6];
         }else{
+            qDebug()<<"Morimos3";
             arbol->persona->pecados[0]+=arreglo[0];
             arbol->persona->pecados[1]+=arreglo[1];
             arbol->persona->pecados[2]+=arreglo[2];
@@ -127,20 +140,28 @@ void Principal::buscarEnArbol(int arreglo[],NodoPersona * nodo,NodoArbol * arbol
             arbol->persona->pecados[6]+=arreglo[6];
         }
     }else if(arbol->nodo!=nullptr){
+        qDebug()<<"Morimos4";
         buscarDeAqui(arbol->nodo,nodo,arreglo,tipo);
-    }else if(arbol->nodo->persona->id>nodo->persona->id){
+    }//else if(arbol->persona->id>nodo->persona->id){
+        //qDebug()<<"Morimos5";
+        //buscarEnArbol(arreglo,nodo,arbol->izq,tipo);
+    //}
+    else{
+        qDebug()<<"Morimos6";
         buscarEnArbol(arreglo,nodo,arbol->izq,tipo);
-    }else{
-        buscarEnArbol(arreglo,nodo,arbol->der,tipo);
     }
 }
 
 void Principal::pasarHerencia(int hijos[],int nietos[],ListaPersonas *descendientes,bool tipo){
+    qDebug()<<"What!!";
     NodoPersona * hijo=descendientes->primerNodo;
     while(hijo!=nullptr){
-        buscarEnArbol(hijos,hijo,mundo->arbolMundo->raiz,tipo);
+        qDebug()<<"What!!2";
+        buscarEnArbol(hijos,hijo,mundo->arbolMundo->raiz,tipo);\
+        qDebug()<<"What!!3";
         NodoPersona * nieto=hijo->persona->hijos->primerNodo;
         while(nieto!=nullptr){
+            qDebug()<<"What!!4";
             buscarEnArbol(nietos,nieto,mundo->arbolMundo->raiz,tipo);
             nieto=nieto->siguiente;
         }
@@ -178,6 +199,7 @@ void Principal::on_pecarBt_clicked()
     NodoPersona * tmp=mundo->lista->primerNodo;
 
     while(tmp!=nullptr){
+        qDebug()<<"Estoy vivo";
         int lujuria=rand()%101;
         int gula=rand()%101;
         int avaricia=rand()%101;
@@ -187,7 +209,9 @@ void Principal::on_pecarBt_clicked()
         int soberbia=rand()%101;
         int pecadosHijos[]={lujuria/2,gula/2,avaricia/2,pereza,ira/2,envidia/2,soberbia/2};
         int pecadosNietos[]={lujuria/4,gula/4,avaricia/4,pereza/4,ira/4,envidia/4,soberbia/4};
+        qDebug()<<"Estoy vivo2";
         pasarHerencia(pecadosHijos,pecadosNietos,tmp->persona->hijos,false);
+        qDebug()<<"Estoy vivo3";
         tmp->persona->pecados[0]+=lujuria;
         tmp->persona->pecados[1]+=gula;
         tmp->persona->pecados[2]+=avaricia;
@@ -195,6 +219,15 @@ void Principal::on_pecarBt_clicked()
         tmp->persona->pecados[4]+=ira;
         tmp->persona->pecados[5]+=envidia;
         tmp->persona->pecados[6]+=soberbia;
+        qDebug()<<"Estoy vivo4";
         tmp=tmp->siguiente;
     }
+}
+
+void Principal::on_crearPersonas_clicked()
+{
+    mundo->crearPersonas(ui->cantidadPersonas->value());
+    mundo->hacerHijos();
+
+
 }

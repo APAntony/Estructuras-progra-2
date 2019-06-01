@@ -7,6 +7,7 @@
 #include <string.h>
 #include <fstream>
 #include <QHash>
+#include "principal.h"
 
 #include "smtp.h"
 
@@ -15,6 +16,8 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     //MainWindow w;
     //w.show();
+    Principal p;
+    p.show();
 
     Persona *p1 = new Persona(12,"Antony", "Artavia", "Costa Rica", "Cristianismo protestante",
                                   "Otaku", "antonyartavia59@gmail.com");

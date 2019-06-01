@@ -25,6 +25,8 @@ private slots:
     void buscarEnArbol(int[],NodoPersona*,NodoArbol*,bool);
     void buscarDeAqui(NodoPersona*,NodoPersona*,int[],bool);
 
+    void on_crearPersonas_clicked();
+
 private:
     Ui::Principal *ui;
     Mundo * mundo;
