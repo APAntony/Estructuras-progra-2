@@ -25,18 +25,24 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        continente.cpp \
         estructuras.cpp \
         main.cpp \
         mainwindow.cpp \
+        principal.cpp \
         smtp.cpp
 
 HEADERS += \
+        continente.h \
         estructuras.h \
         mainwindow.h \
+        principal.h \
         smtp.h
 
 FORMS += \
-        mainwindow.ui
+        continente.ui \
+        mainwindow.ui \
+        principal.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

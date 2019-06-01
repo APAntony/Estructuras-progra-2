@@ -1,0 +1,10 @@
+release/continente.o
+release/estructuras.o
+release/main.o
+release/mainwindow.o
+release/principal.o
+release/smtp.o
+release/moc_continente.o
+release/moc_mainwindow.o
+release/moc_principal.o
+release/moc_smtp.o
